@@ -4,7 +4,7 @@
     <div class="row">
         <div class="col-sm col-md-8">
             <div class="content-section">
-                <form method="POST" action="">
+                <form method="POST" action="" novalidate>
                     {{ form.hidden_tag() }}
                     <fieldset class="form-group">
                         <legend class="border-bottom mb-4">{{ title }}</legend>
@@ -60,9 +60,14 @@
                                 {{ form.productPrice(class="form-control form-control-lg") }}
                             {% endif %}
                         </div>
-                        <div class="form-check">
-                            {{ form.authentication(class="form-check-input") }}
-                            {{ form.authentication.label(class="form-check-label") }}
+                        <div class="form-group">
+                            {{ form.productPhoto.label }}
+                            {{ form.productPhoto(class="form-control-file") }}
+                            {% if form.productPhoto.errors %}
+                                {% for error in form.productPhoto.errors %}
+                                    <span class="text-danger">{{ error }}</span><br>
+                                {% endfor %}
+                            {% endif %}
                         </div>
                     </fieldset>
                     <div class="form-group">
