@@ -4,8 +4,8 @@ from files.seller.forms import UploadProduct, ShopAccount
 seller = Blueprint('seller', __name__)
 
 @seller.route("/seller-home")
-def sellerHome():
-    return render_template('seller/home.html',  title = "Seller Home", sellerHomePage = True)
+def home():
+    return render_template('seller/seller-home.html',  title = "Seller Home", sellerHomePage = True)
 
 @seller.route("/create-seller-home", methods = ["GET", "POST"])
 def createShop():

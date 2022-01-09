@@ -7,7 +7,6 @@ from files.general.routes import general
 def createApp(congigClass = Config):
     app = Flask(__name__)
     app.config.from_object(congigClass)
-    
 
     app.register_blueprint(buyer)
     app.register_blueprint(seller)
