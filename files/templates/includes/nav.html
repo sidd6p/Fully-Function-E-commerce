@@ -4,7 +4,16 @@
             <li class="nav-item"><a href="{{ url_for('seller.home') }}" class="nav-link {% if sellerHomePage %}active{% endif %}">Seller Home</a></li>
             <li class="nav-item"><a href="{{ url_for('seller.uploadProd') }}" class="nav-link {% if uploadProdPage %}active{% endif %}">Upload Product</a></li>
             <li class="nav-item"><a href="{{ url_for('seller.createShop') }}" class="nav-link {% if createShopPage %}active{% endif %}">Create Shop</a></li>
-
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  Account
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                  <li><a class="dropdown-item" href="#">Log-In</a></li>
+                  <li><a class="dropdown-item" href="#">Log-Out action</a></li>
+                  <li><a class="dropdown-item" href="#">Update Shop</a></li>
+                </ul>
+              </li>
         </ul>
     </nav>
     <hr style="clear:both">
