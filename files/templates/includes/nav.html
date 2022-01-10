@@ -7,7 +7,7 @@
             <li class="nav-item"><a href="{{ url_for('product.allProds') }}" class="nav-link {% if allProdsPage %}active{% endif %}">Search Products</a></li>
           {% else %}
             <li class="nav-item"><a href="{{ url_for('seller.home') }}" class="nav-link {% if sellerHomePage %}active{% endif %}">Seller Home</a></li>
-            <li class="nav-item"><a href="{{ url_for('seller.uploadProd') }}" class="nav-link {% if uploadProdPage %}active{% endif %}">Upload Product</a></li>
+            <li class="nav-item"><a href="{{ url_for('product.uploadProd') }}" class="nav-link {% if uploadProdPage %}active{% endif %}">Upload Product</a></li>
             <li class="nav-item"><a href="{{ url_for('seller.createShop') }}" class="nav-link {% if createShopPage %}active{% endif %}">Create Shop</a></li>
           {% endif %}
         </ul>
