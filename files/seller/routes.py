@@ -1,9 +1,10 @@
 from flask import Blueprint, flash, render_template, redirect, url_for, request
-from files.seller.forms import ShopAccount
+from files.seller.forms import ShopAccount, UploadProduct
 from flask_login import login_required, current_user, logout_user, login_user
 from files.general.models import Login
 from files import db
 from files.seller.models import Seller
+from files.product.models import Products
 
 seller = Blueprint('seller', __name__)
 
@@ -39,8 +40,21 @@ def login():
             flash('Login Unsuccessful. Please check email and password', 'danger')
     return render_template('general/login.html', form = form,  title = "Seller-Login", loginPage = True, seller = True)
 
-@login_required
 @seller.route("/seller-logout")
+@login_required
 def logout():
     logout_user()
     return redirect(url_for('seller.home'))
+
+@seller.route("/uploadProd", methods = ["GET", "POST"])
+@login_required
+def uploadProd():
+    form = UploadProduct()
+    if form.validate_on_submit():
+        newProducts = Products(productName = form.productName.data, productTitle = form.productTitle.data, productDesc = form.productDesc.data, productPrice = form.productPrice.data)
+        db.session.add(newProducts)
+        db.session.commit()
+        flash ("Product has been uploaded successfully", 'info')
+        return redirect(url_for("seller.home"))
+    return render_template('products/upload-product.html', form = form,  title = "Upload Product", uploadProdPage = True, seller = True)
+    

@@ -8,9 +8,12 @@
           <article class="media content-section">
             <div class="media-body">
               <div class="article-metadata">
-                <img class="rounded-circle account-img" title="My Image" src="{{ url_for('static', filename='images/' + 'default.jpg') }}">
+                <p>{{ prod["productName"] }}</p>
+                <span style="font-size: 15px; ">{{ prod["productDesc"] }}</span>
                 <hr>
-                Prices: <span style="font-size: 30px; ">{{ prod["price"] }}</span>
+                 <img class="rounded-circle account-img" title="My Image" src="{{ url_for('static', filename='images/' + 'default.jpg') }}">
+                <hr>
+                Prices: <span style="font-size: 30px; ">{{ prod["productPrice"] }}</span>
                 <hr>
                 <h6><small>Sold by: </small>{{ prod["seller"] }}</h6>
                 <h6><small><i>{{ prod["address"] }}</i></small></h6>

@@ -3,6 +3,7 @@ from flask_login import login_required, current_user, login_user, logout_user
 from files.buyer.forms import BuyerAccount
 from files.buyer.models import Buyer
 from files.general.models import Login
+from files.product.models import Products
 from files import db
 
 buyer = Blueprint('buyer', __name__)
@@ -38,8 +39,17 @@ def login():
             flash('Login Unsuccessful. Please check email and password', 'danger')
     return render_template('general/login.html', form = form,  title = "Buyer-Login", loginPage = True, buyer = True)
 
-@login_required
+
 @buyer.route("/buyer-logout")
+@login_required
 def logout():
     logout_user()
     return redirect(url_for('buyer.home'))
+
+@buyer.route("/buy")
+@login_required
+def allProds():
+    allProds = Products.query.all()
+    prods = allProds
+    return render_template("products/show-prods.html", prods = prods, title = "Prodcts", allProdsPage = True, buyer = True)
+

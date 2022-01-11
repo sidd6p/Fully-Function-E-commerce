@@ -6,7 +6,8 @@ from flask_login import LoginManager
 
 db = SQLAlchemy()
 loginManager = LoginManager()
-loginManager.login_view = 'general.login'
+loginManager.login_view = 'seller.login'
+loginManager.login_message = "You need to Log-In first"
 loginManager.login_message_category = 'warning'
 
 def createApp(congigClass = Config):
@@ -18,11 +19,9 @@ def createApp(congigClass = Config):
     from files.buyer.routes import buyer
     from files.seller.routes import seller
     from files.general.routes import general
-    from files.product.routes import product
     app.register_blueprint(buyer)
     app.register_blueprint(seller)
     app.register_blueprint(general)
-    app.register_blueprint(product)
     with app.app_context():
         db.create_all()
     

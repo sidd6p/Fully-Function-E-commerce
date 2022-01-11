@@ -20,3 +20,5 @@ class Seller(db.Model, UserMixin):
     pin = db.Column(db.Integer, nullable=False)
     # prodIDs = db.relationship('Products', backref='seller', lazy=True)
     # myHistory = db.relationship('History', backref = 'seller', lazy = True)
+
+
