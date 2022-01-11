@@ -6,6 +6,7 @@ def loadUser(buyerId):
     return Seller.query.get(int(buyerId))
 
 class Seller(db.Model, UserMixin):
+    __bind_key__ = 'sellerdb'
     id = db.Column(db.Integer, primary_key=True)
     fname = db.Column(db.String(50), nullable=False)
     lname = db.Column(db.String(50), nullable=False)

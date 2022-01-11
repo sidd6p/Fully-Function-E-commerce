@@ -16,6 +16,7 @@ class History(db.Model):
     # sellerId = db.Column(db.Integer, db.ForeignKey('Seller.id'), nullable=False)
 
 class Products(db.Model, UserMixin):
+    __bind_key__ = 'productdb'
     id = db.Column(db.Integer, primary_key=True)
     productName = db.Column(db.String(50), nullable=False)
     productTitle = db.Column(db.String(100), nullable=False)

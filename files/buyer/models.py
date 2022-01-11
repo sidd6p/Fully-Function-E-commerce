@@ -16,6 +16,7 @@ class WishList(db.Model):
     # buyerId = db.Column(db.Integer, db.ForeignKey('Buyer.id'), nullable=False)
 
 class Buyer(db.Model, UserMixin):
+    __bind_key__ = 'buyerdb'
     id = db.Column(db.Integer, primary_key=True)
     fname = db.Column(db.String(50), nullable=False)
     lname = db.Column(db.String(50), nullable=False)

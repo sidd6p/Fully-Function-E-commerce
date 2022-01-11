@@ -37,7 +37,7 @@ def login():
             return redirect(nextPage)
         else:
             flash('Login Unsuccessful. Please check email and password', 'danger')
-    return render_template('general/login.html', form = form,  title = "Seller-Login", loginPage = True, buyer = True)
+    return render_template('general/login.html', form = form,  title = "Seller-Login", loginPage = True, seller = True)
 
 @login_required
 @seller.route("/seller-logout")
