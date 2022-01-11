@@ -8,7 +8,7 @@
           <article class="media content-section">
             <div class="media-body">
               <div class="article-metadata">
-                <img class="rounded-circle account-img" title="My Image" src="{{ prod['image'] }}">
+                <img class="rounded-circle account-img" title="My Image" src="{{ url_for('static', filename='images/' + 'default.jpg') }}">
                 <hr>
                 Prices: <span style="font-size: 30px; ">{{ prod["price"] }}</span>
                 <hr>

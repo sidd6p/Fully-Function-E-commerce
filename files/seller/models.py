@@ -1,6 +1,11 @@
-from files import db
+from files import db, loginManager
+from flask_login import UserMixin
 
-class Seller(db.Model):
+@loginManager.user_loader
+def loadUser(buyerId):
+    return Seller.query.get(int(buyerId))
+
+class Seller(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     fname = db.Column(db.String(50), nullable=False)
     lname = db.Column(db.String(50), nullable=False)

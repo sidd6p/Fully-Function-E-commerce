@@ -1,4 +1,9 @@
-from files import db
+from files import db, loginManager
+from flask_login import UserMixin
+
+@loginManager.user_loader
+def loadUser(buyerId):
+    return Buyer.query.get(int(buyerId))
 
 class Cart(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -10,7 +15,7 @@ class WishList(db.Model):
     # productId = db.Column(db.Integer, db.ForeignKey('Products.id'), nullable=False)
     # buyerId = db.Column(db.Integer, db.ForeignKey('Buyer.id'), nullable=False)
 
-class Buyer(db.Model):
+class Buyer(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     fname = db.Column(db.String(50), nullable=False)
     lname = db.Column(db.String(50), nullable=False)

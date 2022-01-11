@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, IntegerField, TextAreaField, PasswordField, EmailField
+from wtforms import StringField, SubmitField, IntegerField, TextAreaField, PasswordField, EmailField, BooleanField
 from wtforms.validators import Length, DataRequired, Email, EqualTo, NumberRange, ValidationError
 from files.buyer.models import Buyer
 
@@ -13,7 +13,6 @@ class BuyerAccount(FlaskForm):
     city = StringField("City", validators = [DataRequired(), Length(min = 5, max = 50, message = "Field length shoud be bewteen  5 to 50 characte")])
     state = StringField("State", validators = [DataRequired(), Length(min = 5, max = 50, message = "Field length shoud be bewteen  5 to 50 characte")])
     pin = IntegerField("PIN", validators = [DataRequired(), NumberRange(min = 000000, max = 999999)])
-    # authentication = BooleanField("All details provide are correct", validators = [DataRequired()])
     submit = SubmitField("Create Shop")
 
     def validate_email(self, email):
