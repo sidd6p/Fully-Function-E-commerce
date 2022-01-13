@@ -45,10 +45,10 @@ def logout():
     logout_user()
     return redirect(url_for('buyer.home'))
 
-# @buyer.route("/buy")
-# @login_required
-# def allProds():
-#     allProds = Products.query.all()
-#     prods = allProds
-#     return render_template("products/show-prods.html", prods = prods, title = "Prodcts", allProdsPage = True, buyer = True)
+@buyer.route("/buy")
+@login_required
+def prodPages():
+    prod1 = {"productName" : "XYZ", "productDesc" : "This is XYZ", "productPrice" : 123456, "seller": "ABCSeller", "address" : "ABDAddress"}
+    prods = [prod1]
+    return render_template("show-products.html", prods = prods, title = "Prodcts", allProdsPage = True, buyer = True)
 
