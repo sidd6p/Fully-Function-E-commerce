@@ -22,3 +22,7 @@ class Seller(db.Model, UserMixin):
     # myHistory = db.relationship('History', backref = 'seller', lazy = True)
 
 
+
+
+
+

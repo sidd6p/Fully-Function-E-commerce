@@ -1,16 +1,16 @@
 from flask import Blueprint, flash, render_template, redirect, url_for, request
-from files.seller.forms import ShopAccount, UploadProduct
+from files.forms import ShopAccount, UploadProduct, Login
 from flask_login import login_required, current_user, logout_user, login_user
-from files.general.models import Login
 from files import db
-from files.seller.models import Seller
-from files.product.models import Products
+from files.models import Seller
+from sqlalchemy import create_engine
 
 seller = Blueprint('seller', __name__)
 
+@seller.route("/")
 @seller.route("/seller-home")
 def home():
-    return render_template('seller/seller-home.html',  title = "Seller Home", sellerHomePage = True, seller = True)
+    return render_template('seller-home.html',  title = "Seller Home", sellerHomePage = True, seller = True)
 
 @seller.route("/create-seller", methods = ["GET", "POST"])
 def register():
@@ -21,7 +21,7 @@ def register():
         db.session.commit()
         flash("Your seller home has been created successfully", 'info')
         return redirect(url_for("seller.home"))
-    return render_template('seller/create-shop.html', form = form,  title = "Create Your Shop", createShopPage = True, seller = True)
+    return render_template('create-shop.html', form = form,  title = "Create Your Shop", createShopPage = True, seller = True)
 
 
 @seller.route("/seller-login", methods = ["POST", "GET"])
@@ -38,7 +38,7 @@ def login():
             return redirect(nextPage)
         else:
             flash('Login Unsuccessful. Please check email and password', 'danger')
-    return render_template('general/login.html', form = form,  title = "Seller-Login", loginPage = True, seller = True)
+    return render_template('login.html', form = form,  title = "Seller-Login", loginPage = True, seller = True)
 
 @seller.route("/seller-logout")
 @login_required
@@ -51,10 +51,7 @@ def logout():
 def uploadProd():
     form = UploadProduct()
     if form.validate_on_submit():
-        newProducts = Products(productName = form.productName.data, productTitle = form.productTitle.data, productDesc = form.productDesc.data, productPrice = form.productPrice.data)
-        db.session.add(newProducts)
-        db.session.commit()
         flash ("Product has been uploaded successfully", 'info')
         return redirect(url_for("seller.home"))
-    return render_template('products/upload-product.html', form = form,  title = "Upload Product", uploadProdPage = True, seller = True)
+    return render_template('upload-product.html', form = form,  title = "Upload Product", uploadProdPage = True, seller = True)
     

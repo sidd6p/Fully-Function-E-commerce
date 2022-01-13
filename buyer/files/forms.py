@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, IntegerField, TextAreaField, PasswordField, EmailField, BooleanField
 from wtforms.validators import Length, DataRequired, Email, EqualTo, NumberRange, ValidationError
-from files.buyer.models import Buyer
+from files.models import Buyer
 
 class BuyerAccount(FlaskForm):
     buyerFirstName = StringField("First Name", validators = [DataRequired(), Length(min = 5, max = 50, message = "Field length shoud be bewteen  5 to 50 characters")])
@@ -19,3 +19,10 @@ class BuyerAccount(FlaskForm):
         hasBuyer = Buyer.query.filter_by(email=email.data).first()
         if hasBuyer:
             raise ValidationError('That email is taken. Please choose a different one.')
+
+
+class Login(FlaskForm):
+    email = StringField('Email', validators=[DataRequired(), Email()])
+    password = PasswordField('Password', validators=[DataRequired()])
+    remember = BooleanField('Remember me')
+    submit = SubmitField('Login')

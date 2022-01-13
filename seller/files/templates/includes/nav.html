@@ -1,16 +1,6 @@
 <header>
     <nav class="navbar navbar-light" style="background-color: #e3f2fd">
         <ul class="nav nav-pills">
-          {% if buyer %}
-            <li class="nav-item"><a href="{{ url_for('buyer.home') }}" class="nav-link {% if buyerHomePage %}active{% endif %}">Buyer Home</a></li>
-            <li class="nav-item"><a href="{{ url_for('buyer.allProds') }}" class="nav-link {% if allProdsPage %}active{% endif %}">Search Products</a></li>
-            {% if current_user.is_authenticated %}
-              <li class="nav-item"><a href="{{ url_for('buyer.logout') }}" class="nav-link">LogOut</a></li>
-            {% else %}
-              <li class="nav-item"><a href="{{ url_for('buyer.login') }}" class="nav-link {% if loginPage %}active{% endif %}">Login</a></li>
-              <li class="nav-item"><a href="{{ url_for('buyer.register') }}" class="nav-link {% if registerPage %}active{% endif %}">Register</a></li>
-            {% endif %}
-          {% else %}
             <li class="nav-item"><a href="{{ url_for('seller.home') }}" class="nav-link {% if sellerHomePage %}active{% endif %}">Seller Home</a></li>
             <li class="nav-item"><a href="{{ url_for('seller.uploadProd') }}" class="nav-link {% if uploadProdPage %}active{% endif %}">Upload Product</a></li>
             {% if current_user.is_authenticated %}
@@ -19,7 +9,6 @@
               <li class="nav-item"><a href="{{ url_for('seller.login') }}" class="nav-link {% if loginPage %}active{% endif %}">Login</a></li>
               <li class="nav-item"><a href="{{ url_for('seller.register') }}" class="nav-link {% if registerPage %}active{% endif %}">Register</a></li>
             {% endif %}
-          {% endif %}
         </ul>
     </nav>
     <hr style="clear:both">

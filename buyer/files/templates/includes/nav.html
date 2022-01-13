@@ -1,0 +1,14 @@
+<header>
+    <nav class="navbar navbar-light" style="background-color: #e3f2fd">
+        <ul class="nav nav-pills">
+            <li class="nav-item"><a href="{{ url_for('buyer.home') }}" class="nav-link {% if buyerHomePage %}active{% endif %}">Buyer Home</a></li>
+            {% if current_user.is_authenticated %}
+              <li class="nav-item"><a href="{{ url_for('buyer.logout') }}" class="nav-link">LogOut</a></li>
+            {% else %}
+              <li class="nav-item"><a href="{{ url_for('buyer.login') }}" class="nav-link {% if loginPage %}active{% endif %}">Login</a></li>
+              <li class="nav-item"><a href="{{ url_for('buyer.register') }}" class="nav-link {% if registerPage %}active{% endif %}">Register</a></li>
+            {% endif %}
+        </ul>
+    </nav>
+    <hr style="clear:both">
+</header>

@@ -1,16 +1,15 @@
 from flask import Blueprint, flash, render_template, redirect, url_for, request
 from flask_login import login_required, current_user, login_user, logout_user
-from files.buyer.forms import BuyerAccount
-from files.buyer.models import Buyer
-from files.general.models import Login
-from files.product.models import Products
+from files.forms import BuyerAccount, Login
+from files.models import Buyer
 from files import db
 
 buyer = Blueprint('buyer', __name__)
 
+@buyer.route("/")
 @buyer.route("/buyer-home")
 def home():
-    return render_template('buyer/buyer-home.html',  title = "buyer Home", buyerHomePage = True, buyer = True)
+    return render_template('buyer-home.html',  title = "buyer Home", buyerHomePage = True, buyer = True)
 
 @buyer.route("/create-buyer", methods = ["GET", "POST"])
 def register():
@@ -21,7 +20,7 @@ def register():
         db.session.commit()
         flash("Your buyer home has been created successfully", 'info')
         return redirect(url_for("buyer.home"))
-    return render_template('buyer/create-buyer.html', form = form,  title = "Create Your Buyer Account", createBuyerPage = True, buyer = True)
+    return render_template('create-buyer.html', form = form,  title = "Create Your Buyer Account", createBuyerPage = True, buyer = True)
 
 @buyer.route("/buyer-login", methods = ["POST", "GET"])
 def login():
@@ -37,7 +36,7 @@ def login():
             return redirect(nextPage)
         else:
             flash('Login Unsuccessful. Please check email and password', 'danger')
-    return render_template('general/login.html', form = form,  title = "Buyer-Login", loginPage = True, buyer = True)
+    return render_template('login.html', form = form,  title = "Buyer-Login", loginPage = True, buyer = True)
 
 
 @buyer.route("/buyer-logout")
@@ -46,10 +45,10 @@ def logout():
     logout_user()
     return redirect(url_for('buyer.home'))
 
-@buyer.route("/buy")
-@login_required
-def allProds():
-    allProds = Products.query.all()
-    prods = allProds
-    return render_template("products/show-prods.html", prods = prods, title = "Prodcts", allProdsPage = True, buyer = True)
+# @buyer.route("/buy")
+# @login_required
+# def allProds():
+#     allProds = Products.query.all()
+#     prods = allProds
+#     return render_template("products/show-prods.html", prods = prods, title = "Prodcts", allProdsPage = True, buyer = True)
 
