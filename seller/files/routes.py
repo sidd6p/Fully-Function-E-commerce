@@ -3,7 +3,7 @@ from files.forms import ShopAccount, UploadProduct, Login
 from flask_login import login_required, current_user, logout_user, login_user
 from files import db
 from files.models import Seller
-from sqlalchemy import create_engine
+import sqlite3
 
 seller = Blueprint('seller', __name__)
 
@@ -51,6 +51,16 @@ def logout():
 def uploadProd():
     form = UploadProduct()
     if form.validate_on_submit():
+        connection = sqlite3.connect(r'files\databases\product.db')
+        cursor = connection.cursor()
+        query = "SELECT COUNT(*) FROM products"
+        cursor.execute(query)
+        totalProducts = int(cursor.fetchone()[0])
+        query = "INSERT INTO products VALUES (?, ?, ?, ?, ?, ?, ?)"
+        data =  (totalProducts + 1, form.productName.data, form.productType.data, form.productDesc.data, "default.jpg", int(form.productPrice.data), int(current_user.id), )
+        cursor.execute(query, data)
+        connection.commit()
+        connection.close()
         flash ("Product has been uploaded successfully", 'info')
         return redirect(url_for("seller.home"))
     return render_template('upload-product.html', form = form,  title = "Upload Product", uploadProdPage = True, seller = True)
