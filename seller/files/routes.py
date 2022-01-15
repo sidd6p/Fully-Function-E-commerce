@@ -56,8 +56,8 @@ def uploadProd():
         query = "SELECT COUNT(*) FROM products"
         cursor.execute(query)
         totalProducts = int(cursor.fetchone()[0])
-        query = "INSERT INTO products VALUES (?, ?, ?, ?, ?, ?, ?)"
-        data =  (totalProducts + 1, form.productName.data, form.productType.data, form.productDesc.data, "default.jpg", int(form.productPrice.data), int(current_user.id), )
+        query = "INSERT INTO products VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
+        data =  (totalProducts + 1, form.productName.data, form.productType.data, form.productDesc.data, "default.jpg", int(form.productPrice.data), current_user.shopName, int(current_user.id), )
         cursor.execute(query, data)
         connection.commit()
         connection.close()

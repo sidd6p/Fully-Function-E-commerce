@@ -3,6 +3,7 @@ from flask_login import login_required, current_user, login_user, logout_user
 from files.forms import BuyerAccount, Login
 from files.models import Buyer
 from files import db
+import sqlite3
 
 buyer = Blueprint('buyer', __name__)
 
@@ -48,7 +49,47 @@ def logout():
 @buyer.route("/buy")
 @login_required
 def prodPages():
-    prod1 = {"productName" : "XYZ", "productDesc" : "This is XYZ", "productPrice" : 123456, "seller": "ABCSeller", "address" : "ABDAddress"}
-    prods = [prod1]
+    connection = sqlite3.connect(r'C:\Users\siddpc\OneDrive\Desktop\Projects\offline-e-commerce\databases\product.db')
+    cursor = connection.cursor()
+    query = "SELECT * FROM products"
+    cursor.execute(query)
+    prods = cursor.fetchall()
     return render_template("show-products.html", prods = prods, title = "Prodcts", allProdsPage = True, buyer = True)
 
+@buyer.route("/buyer-action", methods = ["POST"])
+@login_required
+def buyerAction():
+    if request.method == "POST":
+        action = request.form.get("buyeraction").split()
+        if action[0] == "1":
+            connection = sqlite3.connect(r'C:\Users\siddpc\OneDrive\Desktop\Projects\offline-e-commerce\databases\history.db')
+            cursor = connection.cursor()
+            query = "INSERT INTO histories (productID, buyerID, sellerID) VALUES (?, ?, ?)"
+            data = (int(action[1]), int(current_user.id), int(action[2])) 
+            cursor.execute(query, data)  
+            connection.commit()
+            connection.close()
+        if action[0] == "2":
+            connection = sqlite3.connect(r'C:\Users\siddpc\OneDrive\Desktop\Projects\offline-e-commerce\buyer\files\databases\cart.db')
+            cursor = connection.cursor()
+            query = "INSERT INTO carts (productID, buyerID) VALUES (?, ?)"
+            data = (int(action[1]), int(current_user.id)) 
+            cursor.execute(query, data)  
+            connection.commit()
+            connection.close()
+        if action[0] == "3":
+            connection = sqlite3.connect(r'C:\Users\siddpc\OneDrive\Desktop\Projects\offline-e-commerce\buyer\files\databases\wishlist.db')
+            cursor = connection.cursor()
+            query = "INSERT INTO wishlists (productID, buyerID) VALUES (?, ?)"
+            data = (int(action[1]), int(current_user.id)) 
+            cursor.execute(query, data)  
+            connection.commit()
+            connection.close()       
+        if action[0] == "4":
+            return redirect(url_for('buyer.buyerEnquiry'))          
+    return "OK"
+
+@buyer.route("/buyer-enquiry")
+@login_required
+def buyerEnquiry():
+    return "Enquiry Done"

@@ -8,14 +8,30 @@
           <article class="media content-section">
             <div class="media-body">
               <div class="article-metadata">
-                <p>{{ prod["productName"] }}</p>
-                <span style="font-size: 15px; ">{{ prod["productDesc"] }}</span>
+                <p>{{ prod[1] }}</p>
+                <span style="font-size: 15px; ">{{ prod[3] }}</span>
                 <hr>
                  <img class="rounded-circle account-img" title="My Image" src="{{ url_for('static', filename='images/' + 'default.jpg') }}">
                 <hr>
-                Prices: <span style="font-size: 30px; ">{{ prod["productPrice"] }}</span>
+                Prices: <span style="font-size: 30px; ">{{ prod[5] }}</span>
                 <hr>
-                <h6><small>Sold by: </small>{{ prod["seller"] }}</h6>
+                <form method = "POST" action = "{{ url_for('buyer.buyerAction') }}">
+                  <div class="form-row align-items-center">
+                    <div class="col-auto">
+                      <select class="custom-select" id="inlineFormCustomSelect" name="buyeraction">
+                        <option value="1 {{ prod[0] }} {{ prod[7] }}" selected>Buy now</option>
+                        <option value="2 {{ prod[0] }}">Add to Cart</option>
+                        <option value="3 {{ prod[0] }}">Add to Wishlist</option>
+                        <option value="4 {{ prod[0] }} {{ prod[7] }}">Enquiry to Seller</option>
+                      </select>
+                    </div>
+                    <div class="col-auto">
+                      <button type="submit" class="btn btn-primary">Proceed</button>
+                    </div>
+                  </div>
+                </form>
+                <hr>
+                <h6><small>Sold by: </small>{{ prod[6] }}</h6>
                 <h6><small><i>{{ prod["address"] }}</i></small></h6>
               </div>
             </div>

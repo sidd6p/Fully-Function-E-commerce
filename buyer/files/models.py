@@ -6,16 +6,6 @@ from datetime import datetime
 def loadUser(buyerId):
     return Buyer.query.get(int(buyerId))
 
-class Cart(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    # productId = db.Column(db.Integer, db.ForeignKey('Products.id'), nullable=False)
-    # buyerId = db.Column(db.Integer, db.ForeignKey('Buyer.id'), nullable=False)
-
-class WishList(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    # productId = db.Column(db.Integer, db.ForeignKey('Products.id'), nullable=False)
-    # buyerId = db.Column(db.Integer, db.ForeignKey('Buyer.id'), nullable=False)
-
 class Buyer(db.Model, UserMixin):
     __bind_key__ = 'buyerdb'
     id = db.Column(db.Integer, primary_key=True)
@@ -31,9 +21,3 @@ class Buyer(db.Model, UserMixin):
     # myCart = db.relationship('Cart', backref = 'buyer', lazy = True)
     # myHistory = db.relationship('History', backref = 'buyer', lazy = True)
 
-class History(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    # productId =db.Column(db.Integer, db.ForeignKey('Buyer.id'), nullable=False)
-    dateOfPurchase = db.Column(db.Date, nullable=False, default=datetime.utcnow)
-    # buyerId = db.Column(db.Integer, db.ForeignKey('Buyer.id'), nullable=False)
-    # sellerId = db.Column(db.Integer, db.ForeignKey('Seller.id'), nullable=False)
