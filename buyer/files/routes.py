@@ -4,6 +4,7 @@ from files.forms import BuyerAccount, Login
 from files.models import Buyer
 from files import db
 import sqlite3
+from files.utils import dbquery
 
 buyer = Blueprint('buyer', __name__)
 
@@ -62,32 +63,24 @@ def buyerAction():
     if request.method == "POST":
         action = request.form.get("buyeraction").split()
         if action[0] == "1":
-            connection = sqlite3.connect(r'C:\Users\siddpc\OneDrive\Desktop\Projects\offline-e-commerce\databases\history.db')
-            cursor = connection.cursor()
             query = "INSERT INTO histories (productID, buyerID, sellerID) VALUES (?, ?, ?)"
             data = (int(action[1]), int(current_user.id), int(action[2])) 
-            cursor.execute(query, data)  
-            connection.commit()
-            connection.close()
+            dbquery(r'C:\Users\siddpc\OneDrive\Desktop\Projects\offline-e-commerce\databases\history.db', query, data)
+            flash("Your purchased has been done", 'info')
         if action[0] == "2":
-            connection = sqlite3.connect(r'C:\Users\siddpc\OneDrive\Desktop\Projects\offline-e-commerce\buyer\files\databases\cart.db')
-            cursor = connection.cursor()
             query = "INSERT INTO carts (productID, buyerID) VALUES (?, ?)"
             data = (int(action[1]), int(current_user.id)) 
-            cursor.execute(query, data)  
-            connection.commit()
-            connection.close()
+            dbquery(r'C:\Users\siddpc\OneDrive\Desktop\Projects\offline-e-commerce\buyer\files\databases\cart.db', query, data)
+            flash("Item has been added to your cart", 'info')
         if action[0] == "3":
-            connection = sqlite3.connect(r'C:\Users\siddpc\OneDrive\Desktop\Projects\offline-e-commerce\buyer\files\databases\wishlist.db')
-            cursor = connection.cursor()
             query = "INSERT INTO wishlists (productID, buyerID) VALUES (?, ?)"
             data = (int(action[1]), int(current_user.id)) 
-            cursor.execute(query, data)  
-            connection.commit()
-            connection.close()       
+            dbquery(r'C:\Users\siddpc\OneDrive\Desktop\Projects\offline-e-commerce\buyer\files\databases\wishlist.db', query, data)
+            flash("Item has been added to your wishlist", 'info')
+
         if action[0] == "4":
             return redirect(url_for('buyer.buyerEnquiry'))          
-    return "OK"
+    return redirect(url_for('buyer.prodPages'))
 
 @buyer.route("/buyer-enquiry")
 @login_required
