@@ -24,20 +24,34 @@ def home():
 def wishlist():
     connection = sqlite3.connect(r'C:\Users\siddpc\OneDrive\Desktop\Projects\offline-e-commerce\databases\product.db')
     cursor = connection.cursor()
-    query = "SELECT * FROM products"
-    cursor.execute(query)
+    query = "SELECT * FROM products INNER JOIN wishlist ON wishlist.productID = products.id WHERE wishlist.buyerID = (?)"
+    data = (int(current_user.id), )
+    cursor.execute(query, data)
     prods = cursor.fetchall()
-    return render_template("show-products.html", prods = prods, title = "Prodcts", allProdsPage = True)
+    return render_template("show-products.html", prods = prods, title = "Prodcts")
 
-@buyer.route("/history")
+@buyer.route("/cart-page")
+@login_required
+def cart():
+    connection = sqlite3.connect(r'C:\Users\siddpc\OneDrive\Desktop\Projects\offline-e-commerce\databases\product.db')
+    cursor = connection.cursor()
+    query = "SELECT * FROM products INNER JOIN carts ON carts.productID = products.id WHERE carts.buyerID = (?)"
+    data = (int(current_user.id), )
+    cursor.execute(query, data)
+    prods = cursor.fetchall()
+    return render_template("show-products.html", prods = prods, title = "Prodcts")
+
+
+@buyer.route("/history-page")
 @login_required
 def history():
     connection = sqlite3.connect(r'C:\Users\siddpc\OneDrive\Desktop\Projects\offline-e-commerce\databases\product.db')
     cursor = connection.cursor()
-    query = "SELECT * FROM products"
-    cursor.execute(query)
+    query = "SELECT * FROM products INNER JOIN histories ON histories.productID = products.id WHERE histories.buyerID = (?)"
+    data = (int(current_user.id), )
+    cursor.execute(query, data)
     prods = cursor.fetchall()
-    return render_template("show-products.html", prods = prods, title = "Prodcts", allProdsPage = True)
+    return render_template("show-products.html", prods = prods, title = "Prodcts")
 
 @buyer.route("/create-buyer", methods = ["GET", "POST"])
 def register():
