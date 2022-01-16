@@ -10,8 +10,34 @@ buyer = Blueprint('buyer', __name__)
 
 @buyer.route("/")
 @buyer.route("/buyer-home")
+@buyer.route("/buy")
 def home():
-    return render_template('buyer-home.html',  title = "buyer Home", buyerHomePage = True, buyer = True)
+    connection = sqlite3.connect(r'C:\Users\siddpc\OneDrive\Desktop\Projects\offline-e-commerce\databases\product.db')
+    cursor = connection.cursor()
+    query = "SELECT * FROM products"
+    cursor.execute(query)
+    prods = cursor.fetchall()
+    return render_template("show-products.html", prods = prods, title = "Prodcts", allProdsPage = True)
+
+@buyer.route("/wishlist-page")
+@login_required
+def wishlist():
+    connection = sqlite3.connect(r'C:\Users\siddpc\OneDrive\Desktop\Projects\offline-e-commerce\databases\product.db')
+    cursor = connection.cursor()
+    query = "SELECT * FROM products"
+    cursor.execute(query)
+    prods = cursor.fetchall()
+    return render_template("show-products.html", prods = prods, title = "Prodcts", allProdsPage = True)
+
+@buyer.route("/history")
+@login_required
+def history():
+    connection = sqlite3.connect(r'C:\Users\siddpc\OneDrive\Desktop\Projects\offline-e-commerce\databases\product.db')
+    cursor = connection.cursor()
+    query = "SELECT * FROM products"
+    cursor.execute(query)
+    prods = cursor.fetchall()
+    return render_template("show-products.html", prods = prods, title = "Prodcts", allProdsPage = True)
 
 @buyer.route("/create-buyer", methods = ["GET", "POST"])
 def register():
@@ -22,7 +48,7 @@ def register():
         db.session.commit()
         flash("Your buyer home has been created successfully", 'info')
         return redirect(url_for("buyer.home"))
-    return render_template('create-buyer.html', form = form,  title = "Create Your Buyer Account", createBuyerPage = True, buyer = True)
+    return render_template('create-buyer.html', form = form,  title = "Create Your Buyer Account", createBuyerPage = True)
 
 @buyer.route("/buyer-login", methods = ["POST", "GET"])
 def login():
@@ -38,7 +64,7 @@ def login():
             return redirect(nextPage)
         else:
             flash('Login Unsuccessful. Please check email and password', 'danger')
-    return render_template('login.html', form = form,  title = "Buyer-Login", loginPage = True, buyer = True)
+    return render_template('login.html', form = form,  title = "Buyer-Login", loginPage = True)
 
 
 @buyer.route("/buyer-logout")
@@ -47,17 +73,7 @@ def logout():
     logout_user()
     return redirect(url_for('buyer.home'))
 
-@buyer.route("/buy")
-@login_required
-def prodPages():
-    connection = sqlite3.connect(r'C:\Users\siddpc\OneDrive\Desktop\Projects\offline-e-commerce\databases\product.db')
-    cursor = connection.cursor()
-    query = "SELECT * FROM products"
-    cursor.execute(query)
-    prods = cursor.fetchall()
-    return render_template("show-products.html", prods = prods, title = "Prodcts", allProdsPage = True, buyer = True)
-
-@buyer.route("/buyer-action", methods = ["POST"])
+@buyer.route("/buyer-action", methods = ["POST", "GET"])
 @login_required
 def buyerAction():
     if request.method == "POST":
@@ -65,24 +81,29 @@ def buyerAction():
         if action[0] == "1":
             query = "INSERT INTO histories (productID, buyerID, sellerID) VALUES (?, ?, ?)"
             data = (int(action[1]), int(current_user.id), int(action[2])) 
-            dbquery(r'C:\Users\siddpc\OneDrive\Desktop\Projects\offline-e-commerce\databases\history.db', query, data)
+            dbquery(query, data)
             flash("Your purchased has been done", 'info')
         if action[0] == "2":
             query = "INSERT INTO carts (productID, buyerID) VALUES (?, ?)"
             data = (int(action[1]), int(current_user.id)) 
-            dbquery(r'C:\Users\siddpc\OneDrive\Desktop\Projects\offline-e-commerce\buyer\files\databases\cart.db', query, data)
+            dbquery(query, data)
             flash("Item has been added to your cart", 'info')
         if action[0] == "3":
-            query = "INSERT INTO wishlists (productID, buyerID) VALUES (?, ?)"
+            query = "INSERT INTO wishlist (productID, buyerID) VALUES (?, ?)"
             data = (int(action[1]), int(current_user.id)) 
-            dbquery(r'C:\Users\siddpc\OneDrive\Desktop\Projects\offline-e-commerce\buyer\files\databases\wishlist.db', query, data)
+            dbquery(query, data)
             flash("Item has been added to your wishlist", 'info')
 
         if action[0] == "4":
             return redirect(url_for('buyer.buyerEnquiry'))          
-    return redirect(url_for('buyer.prodPages'))
+    return redirect(url_for('buyer.home'))
 
 @buyer.route("/buyer-enquiry")
 @login_required
 def buyerEnquiry():
     return "Enquiry Done"
+
+@buyer.route('/account', methods=['GET', 'POST'])
+@login_required
+def account():
+    return render_template('accounts.html',  title = "Buyer-Account", accountPage = True)

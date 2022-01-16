@@ -51,13 +51,10 @@ def logout():
 def uploadProd():
     form = UploadProduct()
     if form.validate_on_submit():
-        connection = sqlite3.connect(r'files\databases\product.db')
+        connection = sqlite3.connect(r'C:\Users\siddpc\OneDrive\Desktop\Projects\offline-e-commerce\databases\product.db')
         cursor = connection.cursor()
-        query = "SELECT COUNT(*) FROM products"
-        cursor.execute(query)
-        totalProducts = int(cursor.fetchone()[0])
-        query = "INSERT INTO products VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
-        data =  (totalProducts + 1, form.productName.data, form.productType.data, form.productDesc.data, "default.jpg", int(form.productPrice.data), current_user.shopName, int(current_user.id), )
+        query = "INSERT INTO products (productName, productType, productPhoto, productDesc, productPrice, shopName, sellerID, sellerAddress) VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
+        data =  (form.productName.data, form.productType.data, "default.jpg", form.productDesc.data, int(form.productPrice.data), current_user.shopName, int(current_user.id), current_user.address, )
         cursor.execute(query, data)
         connection.commit()
         connection.close()
