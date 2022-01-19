@@ -10,7 +10,7 @@ seller = Blueprint('seller', __name__)
 @seller.route("/")
 @seller.route("/seller-home")
 def home():
-    return render_template('seller-home.html',  title = "Seller Home", sellerHomePage = True, seller = True)
+    return render_template('accounts.html',  title = "Seller-Account", accountPage = True)
 
 @seller.route("/create-seller", methods = ["GET", "POST"])
 def register():
@@ -46,7 +46,7 @@ def logout():
     logout_user()
     return redirect(url_for('seller.home'))
 
-@seller.route("/uploadProd", methods = ["GET", "POST"])
+@seller.route("/upload-Products", methods = ["GET", "POST"])
 @login_required
 def uploadProd():
     form = UploadProduct()
@@ -62,3 +62,24 @@ def uploadProd():
         return redirect(url_for("seller.home"))
     return render_template('upload-product.html', form = form,  title = "Upload Product", uploadProdPage = True, seller = True)
     
+@seller.route("/my-products")
+def allProducts():
+    connection = sqlite3.connect(r'C:\Users\siddpc\OneDrive\Desktop\Projects\offline-e-commerce\databases\product.db')
+    cursor = connection.cursor()
+    query = "SELECT * FROM products WHERE sellerID = (?)"
+    data = (int(current_user.id), )
+    cursor.execute(query, data)
+    prods = cursor.fetchall()
+    return render_template("show-products.html", prods = prods, title = "Products", allProdsPage = True)
+
+
+@seller.route("/history")
+def history():
+    connection = sqlite3.connect(r'C:\Users\siddpc\OneDrive\Desktop\Projects\offline-e-commerce\databases\product.db')
+    cursor = connection.cursor()
+    query = "SELECT  products.productName, products.productPhoto, histories.buyerName, histories.buyerEmail\
+        FROM products INNER JOIN histories ON products.sellerID = histories.sellerID WHERE histories.sellerID = (?) AND histories.productID = products.id"
+    data = (int(current_user.id), )
+    cursor.execute(query, data)
+    buyers = cursor.fetchall()
+    return render_template("my-buyers.html", buyers = buyers, title = "Buyers")

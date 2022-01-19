@@ -1,0 +1,26 @@
+{% extends "layout.html" %}
+{% block content %}
+  <div class="container">
+    <h3>Results are</h3><br>
+      <div class="row">
+        {% for buyer in buyers %}
+        <div class="col-sm-auto col-md-auto border border-primary border border-lg m-2">
+          <article class="media content-section">
+            <div class="media-body">
+              <div class="article-metadata">
+                <p>Product: {{ buyer[0] }}</p>
+                <span style="font-size: 15px; ">Buyer Name: {{ buyer[2] }}</span><br>
+                <span style="font-size: 15px; ">Buyer Email: {{ buyer[3] }}</span>
+
+                <hr>
+                 <img class="rounded-circle account-img" title="My Image" src="{{ url_for('static', filename='images/' + 'default1.jpg') }}">
+                <hr>
+              </div>
+            </div>
+          </article>
+        </div>
+      {% endfor %}
+      </div>
+    </div>
+  </div>
+{% endblock content %}

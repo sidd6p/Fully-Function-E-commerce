@@ -24,7 +24,7 @@ def home():
 def wishlist():
     connection = sqlite3.connect(r'C:\Users\siddpc\OneDrive\Desktop\Projects\offline-e-commerce\databases\product.db')
     cursor = connection.cursor()
-    query = "SELECT * FROM products INNER JOIN wishlist ON wishlist.productID = products.id WHERE wishlist.buyerID = (?)"
+    query = "SELECT * FROM products INNER JOIN basket ON basket.productID = products.id WHERE basket.buyerID = (?) AND basket.btype = 'w'"
     data = (int(current_user.id), )
     cursor.execute(query, data)
     prods = cursor.fetchall()
@@ -35,7 +35,7 @@ def wishlist():
 def cart():
     connection = sqlite3.connect(r'C:\Users\siddpc\OneDrive\Desktop\Projects\offline-e-commerce\databases\product.db')
     cursor = connection.cursor()
-    query = "SELECT * FROM products INNER JOIN carts ON carts.productID = products.id WHERE carts.buyerID = (?)"
+    query = "SELECT * FROM products INNER JOIN basket ON basket.productID = products.id WHERE basket.buyerID = (?) AND basket.bType = 'c'"
     data = (int(current_user.id), )
     cursor.execute(query, data)
     prods = cursor.fetchall()
@@ -93,23 +93,20 @@ def buyerAction():
     if request.method == "POST":
         action = request.form.get("buyeraction").split()
         if action[0] == "1":
-            query = "INSERT INTO histories (productID, buyerID, sellerID) VALUES (?, ?, ?)"
-            data = (int(action[1]), int(current_user.id), int(action[2])) 
+            query = "INSERT INTO histories (productID, buyerID, sellerID, buyerName, buyerEmail) VALUES (?, ?, ?, ?, ?)"
+            data = (int(action[1]), int(current_user.id), int(action[2]), current_user.fname, current_user.email, ) 
             dbquery(query, data)
             flash("Your purchased has been done", 'info')
         if action[0] == "2":
-            query = "INSERT INTO carts (productID, buyerID) VALUES (?, ?)"
-            data = (int(action[1]), int(current_user.id)) 
+            query = "INSERT INTO basket (productID, buyerID, bType) VALUES (?, ?, ?)"
+            data = (int(action[1]), int(current_user.id), "c", ) 
             dbquery(query, data)
             flash("Item has been added to your cart", 'info')
         if action[0] == "3":
-            query = "INSERT INTO wishlist (productID, buyerID) VALUES (?, ?)"
-            data = (int(action[1]), int(current_user.id)) 
+            query = "INSERT INTO basket (productID, buyerID, bType) VALUES (?, ?, ?)"
+            data = (int(action[1]), int(current_user.id), "w", ) 
             dbquery(query, data)
-            flash("Item has been added to your wishlist", 'info')
-
-        if action[0] == "4":
-            return redirect(url_for('buyer.buyerEnquiry'))          
+            flash("Item has been added to your wishlist", 'info')        
     return redirect(url_for('buyer.home'))
 
 @buyer.route("/buyer-enquiry")
