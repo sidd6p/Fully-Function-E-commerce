@@ -42,12 +42,12 @@ def cart():
     return render_template("show-products.html", prods = prods, title = "Prodcts")
 
 
-@buyer.route("/history-page")
+@buyer.route("/order-page")
 @login_required
-def history():
+def order():
     connection = sqlite3.connect(r'C:\Users\siddpc\OneDrive\Desktop\Projects\offline-e-commerce\databases\product.db')
     cursor = connection.cursor()
-    query = "SELECT * FROM products INNER JOIN histories ON histories.productID = products.id WHERE histories.buyerID = (?)"
+    query = "SELECT * FROM products INNER JOIN orders ON orders.productID = products.id WHERE orders.buyerID = (?)"
     data = (int(current_user.id), )
     cursor.execute(query, data)
     prods = cursor.fetchall()
@@ -93,17 +93,17 @@ def buyerAction():
     if request.method == "POST":
         action = request.form.get("buyeraction").split()
         if action[0] == "1":
-            query = "INSERT INTO histories (productID, buyerID, sellerID, buyerName, buyerEmail) VALUES (?, ?, ?, ?, ?)"
+            query = "INSERT INTO orders (productID, buyerID, sellerID, buyerName, buyerEmail) VALUES (?, ?, ?, ?, ?)"
             data = (int(action[1]), int(current_user.id), int(action[2]), current_user.fname, current_user.email, ) 
             dbquery(query, data)
-            flash("Your purchased has been done", 'info')
+            flash("Your order has been placed", 'info')
         if action[0] == "2":
-            query = "INSERT INTO basket (productID, buyerID, bType) VALUES (?, ?, ?)"
+            query = """ INSERT OR REPLACE into basket VALUES (?, ?, ?)"""
             data = (int(action[1]), int(current_user.id), "c", ) 
             dbquery(query, data)
             flash("Item has been added to your cart", 'info')
         if action[0] == "3":
-            query = "INSERT INTO basket (productID, buyerID, bType) VALUES (?, ?, ?)"
+            query = """ INSERT OR REPLACE into basket VALUES (?, ?, ?)"""
             data = (int(action[1]), int(current_user.id), "w", ) 
             dbquery(query, data)
             flash("Item has been added to your wishlist", 'info')        
