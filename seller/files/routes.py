@@ -73,13 +73,15 @@ def allProducts():
     return render_template("show-products.html", prods = prods, title = "Products", allProdsPage = True)
 
 
-@seller.route("/history")
-def history():
-    connection = sqlite3.connect(r'C:\Users\siddpc\OneDrive\Desktop\Projects\offline-e-commerce\databases\product.db')
-    cursor = connection.cursor()
-    query = "SELECT  products.productName, products.productPhoto, histories.buyerName, histories.buyerEmail\
-        FROM products INNER JOIN histories ON products.sellerID = histories.sellerID WHERE histories.sellerID = (?) AND histories.productID = products.id"
-    data = (int(current_user.id), )
-    cursor.execute(query, data)
-    buyers = cursor.fetchall()
-    return render_template("my-buyers.html", buyers = buyers, title = "Buyers")
+@seller.route("/orders", methods = ["POST", "GET"])
+def order():
+    if request.method == "GET":
+        connection = sqlite3.connect(r'C:\Users\siddpc\OneDrive\Desktop\Projects\offline-e-commerce\databases\product.db')
+        cursor = connection.cursor()
+        query = "SELECT  products.productName, products.productPhoto, orders.buyerName, orders.buyerEmail\
+            FROM products INNER JOIN orders ON products.sellerID = orders.sellerID WHERE orders.sellerID = (?) AND orders.productID = products.id"
+        data = (int(current_user.id), )
+        cursor.execute(query, data)
+        buyers = cursor.fetchall()
+        return render_template("my-buyers.html", buyers = buyers, title = "Buyers")
+        

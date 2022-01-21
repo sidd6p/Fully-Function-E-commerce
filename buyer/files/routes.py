@@ -28,7 +28,7 @@ def wishlist():
     data = (int(current_user.id), )
     cursor.execute(query, data)
     prods = cursor.fetchall()
-    return render_template("show-products.html", prods = prods, title = "Prodcts")
+    return render_template("show-products.html", prods = prods, title = "wishlist", bType = "wishlist")
 
 @buyer.route("/cart-page")
 @login_required
@@ -39,7 +39,7 @@ def cart():
     data = (int(current_user.id), )
     cursor.execute(query, data)
     prods = cursor.fetchall()
-    return render_template("show-products.html", prods = prods, title = "Prodcts")
+    return render_template("show-products.html", prods = prods, title = "cart", bType = "cart")
 
 
 @buyer.route("/order-page")
@@ -51,7 +51,7 @@ def order():
     data = (int(current_user.id), )
     cursor.execute(query, data)
     prods = cursor.fetchall()
-    return render_template("show-products.html", prods = prods, title = "Prodcts")
+    return render_template("show-products.html", prods = prods, title = "Orders", bType = "order", status = "Accepted")
 
 @buyer.route("/create-buyer", methods = ["GET", "POST"])
 def register():
@@ -92,6 +92,11 @@ def logout():
 def buyerAction():
     if request.method == "POST":
         action = request.form.get("buyeraction").split()
+        if action[0] == "0":
+            query = "DELETE FROM orders WHERE productID = ? AND buyerID = ?"
+            data = (int(action[1]), int(current_user.id), ) 
+            dbquery(query, data)
+            flash("Your order has been cancelled", 'info')
         if action[0] == "1":
             query = "INSERT INTO orders (productID, buyerID, sellerID, buyerName, buyerEmail) VALUES (?, ?, ?, ?, ?)"
             data = (int(action[1]), int(current_user.id), int(action[2]), current_user.fname, current_user.email, ) 
@@ -106,7 +111,17 @@ def buyerAction():
             query = """ INSERT OR REPLACE into basket VALUES (?, ?, ?)"""
             data = (int(action[1]), int(current_user.id), "w", ) 
             dbquery(query, data)
-            flash("Item has been added to your wishlist", 'info')        
+            flash("Item has been added to your wishlist", 'info')    
+        if action[0] == "-2":
+            query = "DELETE FROM basket WHERE productID = ? AND buyerID = ?"
+            data = (int(action[1]), int(current_user.id), ) 
+            dbquery(query, data)
+            flash("Item has been removed from your cart", 'info')    
+        if action[0] == "-3":
+            query = "DELETE FROM basket WHERE productID = ? AND buyerID = ?"
+            data = (int(action[1]), int(current_user.id), ) 
+            dbquery(query, data)
+            flash("Item has been removed from your wishlist", 'info')   
     return redirect(url_for('buyer.home'))
 
 @buyer.route("/buyer-enquiry")

@@ -18,6 +18,21 @@
               </div>
             </div>
           </article>
+          <form method = "POST" action = "">
+            <div class="form-row align-items-center">
+              <div class="col-auto">
+                <select class="custom-select" id="inlineFormCustomSelect" name="buyeraction">
+                  <option value="1" selected>Accept</option>
+                  <option value="2">Cancelled</option>
+                  <option value="3">Out for Deilvery</option>
+                </select>
+              </div>
+              <div class="col-auto">
+                <button type="submit" class="btn btn-primary">Proceed</button>
+              </div>
+            </div>
+          </form>
+          <hr>
         </div>
       {% endfor %}
       </div>
