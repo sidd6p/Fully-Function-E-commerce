@@ -1,9 +1,11 @@
+from this import d
 from flask import Blueprint, flash, render_template, redirect, url_for, request
 from files.forms import ShopAccount, UploadProduct, Login
 from flask_login import login_required, current_user, logout_user, login_user
 from files import db
 from files.models import Seller
 import sqlite3
+from files.utils import dbquery
 
 seller = Blueprint('seller', __name__)
 
@@ -63,6 +65,7 @@ def uploadProd():
     return render_template('upload-product.html', form = form,  title = "Upload Product", uploadProdPage = True, seller = True)
     
 @seller.route("/my-products")
+@login_required
 def allProducts():
     connection = sqlite3.connect(r'C:\Users\siddpc\OneDrive\Desktop\Projects\offline-e-commerce\databases\product.db')
     cursor = connection.cursor()
@@ -74,14 +77,21 @@ def allProducts():
 
 
 @seller.route("/orders", methods = ["POST", "GET"])
+@login_required
 def order():
-    if request.method == "GET":
-        connection = sqlite3.connect(r'C:\Users\siddpc\OneDrive\Desktop\Projects\offline-e-commerce\databases\product.db')
-        cursor = connection.cursor()
-        query = "SELECT  products.productName, products.productPhoto, orders.buyerName, orders.buyerEmail\
-            FROM products INNER JOIN orders ON products.sellerID = orders.sellerID WHERE orders.sellerID = (?) AND orders.productID = products.id"
-        data = (int(current_user.id), )
-        cursor.execute(query, data)
-        buyers = cursor.fetchall()
-        return render_template("my-buyers.html", buyers = buyers, title = "Buyers")
-        
+    connection = sqlite3.connect(r'C:\Users\siddpc\OneDrive\Desktop\Projects\offline-e-commerce\databases\product.db')
+    cursor = connection.cursor()
+    query = "SELECT  products.productName, products.productPhoto, orders.buyerName, orders.buyerEmail, orders.id, orders.status, orders.productID\
+        FROM products INNER JOIN orders ON products.sellerID = orders.sellerID WHERE orders.sellerID = (?) AND orders.productID = products.id"
+    data = (int(current_user.id), )
+    cursor.execute(query, data)
+    orders = cursor.fetchall()
+    if request.method == "POST":
+        action = request.form.get("selleraction").split()
+        query = " UPDATE orders SET status = ? WHERE id = ?"
+        data = (str(action[0]), int(action[1]),)
+        dbquery(query, data)
+        flash("Order (Order Id: {}) has been {}".format(action[1], action[0]), 'info')
+       
+    
+    return render_template("orders.html", orders = orders, title = "Orders")

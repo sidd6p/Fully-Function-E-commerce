@@ -1,0 +1,54 @@
+{% extends "layout.html" %}
+{% block content %}
+  <div class="container">
+    <h3>Results are</h3><br>
+      <div class="row">
+        {% for order in orders %}
+        <div class="col-sm-auto col-md-auto border border-primary border border-lg m-2">
+          <article class="media content-section">
+            <div class="media-body">
+              <div class="article-metadata">
+                <div class="row">
+                  <div class="col"><p>Order ID: {{ order[4] }}</p></div>
+                  <div class="col"><p>Product ID: {{ order[6] }}</p></div>
+                </div>
+                <hr>
+                <p>Product Name: {{ order[0] }} </p>
+                <span style="font-size: 15px; ">order Name: {{ order[2] }}</span><br>
+                <span style="font-size: 15px; ">order Email: {{ order[3] }}</span>
+                <hr>
+                 <img class="rounded-circle account-img" title="My Image" src="{{ url_for('static', filename='images/' + 'default1.jpg') }}">
+                <hr>
+              </div>
+            </div>
+          </article>
+          <form method = "POST" action = "">
+            <div class="form-row align-items-center">
+              <div class="col-auto">
+                <select class="custom-select" id="inlineFormCustomSelect" name="selleraction">
+                  {% if order[5] != "Accept" %}
+                    <option value="Accept {{ order[4] }}" selected>Accept</option>
+                  {% endif %}
+                  {% if order[5] != "Cancelled" %}
+                    <option value="Cancelled {{ order[4] }}">Cancelled</option>
+                  {% endif %}
+                  {% if order[5] != "Out_for_Deilvery" %}
+                    <option value="Out_for_Deilvery {{ order[4] }}">Out for Deilvery</option>
+                  {% endif %}
+                  {% if order[5] != "Completed" %}
+                    <option value="Completed {{ order[4] }}">Completed</option>
+                  {% endif %}
+                </select>
+              </div>
+              <div class="col-auto">
+                <button type="submit" class="btn btn-primary">Proceed</button>
+              </div>
+            </div>
+          </form>
+          <hr>
+        </div>
+      {% endfor %}
+      </div>
+    </div>
+  </div>
+{% endblock content %}
