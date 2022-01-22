@@ -73,7 +73,7 @@ def allProducts():
     data = (int(current_user.id), )
     cursor.execute(query, data)
     prods = cursor.fetchall()
-    return render_template("show-products.html", prods = prods, title = "Products", allProdsPage = True)
+    return render_template("show-products.html", prods = prods, title = "Your Products", allProdsPage = True)
 
 
 @seller.route("/orders", methods = ["POST", "GET"])
@@ -82,7 +82,7 @@ def order():
     connection = sqlite3.connect(r'C:\Users\siddpc\OneDrive\Desktop\Projects\offline-e-commerce\databases\product.db')
     cursor = connection.cursor()
     query = "SELECT  products.productName, products.productPhoto, orders.buyerName, orders.buyerEmail, orders.id, orders.status, orders.productID\
-        FROM products INNER JOIN orders ON products.sellerID = orders.sellerID WHERE orders.sellerID = (?) AND orders.productID = products.id"
+        FROM products INNER JOIN orders ON products.sellerID = orders.sellerID WHERE orders.sellerID = (?) AND orders.productID = products.id AND orders.status <> 'Received' AND orders.status <> 'Cancelled'"
     data = (int(current_user.id), )
     cursor.execute(query, data)
     orders = cursor.fetchall()
@@ -92,6 +92,17 @@ def order():
         data = (str(action[0]), int(action[1]),)
         dbquery(query, data)
         flash("Order (Order Id: {}) has been {}".format(action[1], action[0]), 'info')
-       
-    
-    return render_template("orders.html", orders = orders, title = "Orders")
+        return redirect(url_for("seller.order"))
+    return render_template("orders.html", orders = orders, title = "Your Orders")
+
+@seller.route("/history")
+@login_required
+def history():
+    connection = sqlite3.connect(r'C:\Users\siddpc\OneDrive\Desktop\Projects\offline-e-commerce\databases\product.db')
+    cursor = connection.cursor()
+    query = "SELECT products.productName, products.productPhoto, orders.buyerName, orders.buyerEmail, orders.id, orders.status, orders.productID\
+         FROM products INNER JOIN orders ON orders.productID = products.id WHERE orders.sellerID = (?) AND (orders.status = 'Received' OR orders.status = 'Cancelled')"
+    data = (int(current_user.id), )
+    cursor.execute(query, data)
+    orders = cursor.fetchall()
+    return render_template("orders.html", orders = orders, title = "Your History")
