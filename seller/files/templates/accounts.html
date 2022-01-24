@@ -2,30 +2,50 @@
 {% block content %}
   <div class="container">
     <div class="row">
-      <div class="col-sm col-md-8">
-        <div class="content-section">
-          <div class="media">
-            <img class="rounded-circle account-img" title="My Image" src="{{ url_for('static', filename='images/' + 'default1.jpg') }}">
-            <div class="media-body">
-              <h2 class="account-heading">{{ current_user.username }}</h2>
-              <p class="text-secondary">{{ current_user.email }}</p>
-           </div>
+      <div class="col-sm col-md-4">
+        <img class="rounded" title="My Image" src="{{ url_for('static', filename='images/Shops/' + current_user.shopLogo ) }}">
+      </div>
+      <div class="col-sm col-md-4">
+        <h2 class="account-heading">{{ current_user.shopName }}</h2>
+        <i><h6>{{ current_user.address }}</h6></i>
+        <i>{{ current_user.city }} {{ current_user.state }} {{ current_user.pin }}</i>
+        <hr>
+        <div>
+          <p>
+            Owner: <b>{{ current_user.fname }} {{ current_user.lname }}</b>
+          </p>
+          <p>
+            Owner Email: <b>{{ current_user.email }}</b>
+          </p>
         </div>
       </div>
     </div>
-    <div class="container">
+   </div> 
+  </div>
+  <br>
+  <br>
+  <div class="container">
+    <h3>Your Products</h3><br>
       <div class="row">
-        <div class="col-sm col-md-auto">
-          <div class="content-section">
-            <p class='text-muted'>
-              <ul class="list-group">
-                <li style="color: #2b2b2bd2; font-size: 20px;" class="list-group-item list-group-item-light side-view"><a href="{{ url_for('seller.order') }}">Order Received</a></li>
-                <li style="color: #2b2b2bd2; font-size: 20px;" class="list-group-item list-group-item-light side-view"><a href="{{ url_for('seller.allProducts') }}">Your Products</a></li>
-                <li style="color: #2b2b2bd2; font-size: 20px;" class="list-group-item list-group-item-light side-view"><a href="{{ url_for('seller.history') }}">Your History</a></li>
-              </ul>
-            </p>
-          </div>
+        {% for prod in prods %}
+        <div class="col-sm-auto col-md-auto border border-primary border border-lg m-2">
+          <article class="media content-section">
+            <div class="media-body">
+              <div class="article-metadata">
+                <p>{{ prod[1] }}</p>
+                <span style="font-size: 15px; ">{{ prod[4] }}</span>
+                <hr>
+                 <img class="rounded-circle account-img" title="My Image" src="{{ url_for('static', filename='images/' + 'default1.jpg') }}">
+                <hr>
+                Prices: <span style="font-size: 30px; ">{{ prod[5] }}</span>
+                <hr>
+                <h6><small>Sold by: </small>{{ prod[6] }}</h6>
+                <h6><small>Address: <i>{{ prod[8] }}</i></small></h6>
+              </div>
+            </div>
+          </article>
         </div>
+      {% endfor %}
       </div>
     </div>
   </div>
