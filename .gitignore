@@ -1,6 +1,8 @@
-#images
-*/images/*
 
+
+#images
+images/
+!default.jpg
 #databases
 *db
 
