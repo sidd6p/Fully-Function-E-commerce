@@ -23,7 +23,7 @@
                 Prices: <span style="font-size: 30px; ">{{ prod[5] }}</span>
                 <hr>
                 {% if title != 'Your History' %}
-                  <form method = "POST" action = "{{ url_for('buyer.buyerAction') }}">
+                  <form method = "POST" action = "{{ url_for('orders.buyerAction') }}">
                     <div class="form-row align-items-center">
                       <div class="col-auto">
                         <select class="custom-select" id="inlineFormCustomSelect" name="buyeraction">

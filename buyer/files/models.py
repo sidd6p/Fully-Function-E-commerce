@@ -17,7 +17,3 @@ class Buyer(db.Model, UserMixin):
     city = db.Column(db.String(50), nullable=False)
     state = db.Column(db.String(50), nullable=False)
     pin = db.Column(db.Integer, nullable=False)
-    # myWishlist = db.relationship('WishList', backref = 'buyer', lazy = True)
-    # myCart = db.relationship('Cart', backref = 'buyer', lazy = True)
-    # myHistory = db.relationship('History', backref = 'buyer', lazy = True)
-

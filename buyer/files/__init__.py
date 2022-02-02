@@ -16,9 +16,11 @@ def createApp(congigClass = Config):
     db.init_app(app)
     loginManager.init_app(app)
 
-    from files.routes import buyer
-    app.register_blueprint(buyer)
-    
+    from files.routes.user import user
+    app.register_blueprint(user)
+    from files.routes.orders import orders
+    app.register_blueprint(orders)
+
     with app.app_context():
         db.create_all()
     

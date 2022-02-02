@@ -1,12 +1,10 @@
-from re import T
-from this import d
-from flask import Blueprint, flash, render_template, redirect, url_for, request
+from flask import Blueprint, flash, render_template, redirect, url_for, request, current_app
 from files.forms import ShopAccount, UploadProduct, Login
 from flask_login import login_required, current_user, logout_user, login_user
 from files import db
 from files.models import Seller
 import sqlite3
-from files.utils import dbquery, saveShopImage
+from files.utils import dbquery, saveShopImage, prodDirPath, saveProdImage
 
 seller = Blueprint('seller', __name__)
 
@@ -20,7 +18,8 @@ def home():
     data = (int(current_user.id), )
     cursor.execute(query, data)
     prods = cursor.fetchall()
-    return render_template('accounts.html',  prods = prods, title = "Seller-Account", accountPage = True)
+    return render_template('accounts.html',  prods = prods, title = "Seller-Account", accountPage = True, prodDirPath = "C:\\Users\\siddpc\\OneDrive\\Desktop\\Projects\\offline-e-commerce\\databases\\images\\products\\"
+)
 
 @seller.route("/create-seller", methods = ["GET", "POST"])
 def register():
@@ -62,10 +61,11 @@ def logout():
 def uploadProd():
     form = UploadProduct()
     if form.validate_on_submit():
+        productImage = saveProdImage(form.productPhoto.data)
         connection = sqlite3.connect(r'C:\Users\siddpc\OneDrive\Desktop\Projects\offline-e-commerce\databases\product.db')
         cursor = connection.cursor()
         query = "INSERT INTO products (productName, productType, productPhoto, productDesc, productPrice, shopName, sellerID, sellerAddress) VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
-        data =  (form.productName.data, form.productType.data, "default.jpg", form.productDesc.data, int(form.productPrice.data), current_user.shopName, int(current_user.id), current_user.address, )
+        data =  (form.productName.data, form.productType.data, productImage, form.productDesc.data, int(form.productPrice.data), current_user.shopName, int(current_user.id), current_user.address, )
         cursor.execute(query, data)
         connection.commit()
         connection.close()
