@@ -52,7 +52,7 @@ def login():
 @login_required
 def logout():
     logout_user()
-    return redirect(url_for('buyer.home'))
+    return redirect(url_for('user.home'))
 
 
 @user.route('/account', methods=['GET', 'POST'])

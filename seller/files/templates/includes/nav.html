@@ -1,15 +1,15 @@
 <header>
     <nav class="navbar navbar-light" style="background-color: #e3f2fd">
         <ul class="nav nav-pills">
-            <li class="nav-item"><a href="{{ url_for('seller.home') }}" class="nav-link {% if sellerHomePage %}active{% endif %}">Seller Home</a></li>
-            <li class="nav-item"><a href="{{ url_for('seller.uploadProd') }}" class="nav-link {% if uploadProdPage %}active{% endif %}">Upload Product</a></li>
+            <li class="nav-item"><a href="{{ url_for('user.home') }}" class="nav-link {% if sellerHomePage %}active{% endif %}">Seller Home</a></li>
+            <li class="nav-item"><a href="{{ url_for('products.uploadProd') }}" class="nav-link {% if uploadProdPage %}active{% endif %}">Upload Product</a></li>
             {% if current_user.is_authenticated %}
-              <li class="nav-item"><a href="{{ url_for('seller.order') }}" class="nav-link {% if orderPage %}active{% endif %}">Orders</a></li>
-              <li class="nav-item"><a href="{{ url_for('seller.history') }}" class="nav-link {% if historyPage %}active{% endif %}">History</a></li>
-              <li class="nav-item"><a href="{{ url_for('seller.logout') }}" class="nav-link">LogOut</a></li>
+              <li class="nav-item"><a href="{{ url_for('products.order') }}" class="nav-link {% if orderPage %}active{% endif %}">Orders</a></li>
+              <li class="nav-item"><a href="{{ url_for('products.history') }}" class="nav-link {% if historyPage %}active{% endif %}">History</a></li>
+              <li class="nav-item"><a href="{{ url_for('user.logout') }}" class="nav-link">LogOut</a></li>
             {% else %}
-              <li class="nav-item"><a href="{{ url_for('seller.login') }}" class="nav-link {% if loginPage %}active{% endif %}">Login</a></li>
-              <li class="nav-item"><a href="{{ url_for('seller.register') }}" class="nav-link {% if registerPage %}active{% endif %}">Register</a></li>
+              <li class="nav-item"><a href="{{ url_for('user.login') }}" class="nav-link {% if loginPage %}active{% endif %}">Login</a></li>
+              <li class="nav-item"><a href="{{ url_for('user.register') }}" class="nav-link {% if registerPage %}active{% endif %}">Register</a></li>
             {% endif %}
         </ul>
     </nav>

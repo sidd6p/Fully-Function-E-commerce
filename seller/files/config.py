@@ -6,4 +6,4 @@ class Config(object):
         'sellerdb' : "sqlite:///databases/seller.db",
     }
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    UPLOAD_FOLDER = "C:\Users\siddpc\OneDrive\Desktop\Projects\offline-e-commerce\images\products"
+    # UPLOAD_FOLDER = "C:\Users\siddpc\OneDrive\Desktop\Projects\offline-e-commerce\images\products"

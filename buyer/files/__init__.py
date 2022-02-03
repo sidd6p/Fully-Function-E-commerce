@@ -5,7 +5,7 @@ from flask_login import LoginManager
 
 db = SQLAlchemy()
 loginManager = LoginManager()
-loginManager.login_view = 'buyer.login'
+loginManager.login_view = 'user.login'
 loginManager.login_message = "You need to Log-In first"
 loginManager.login_message_category = 'warning'
 
