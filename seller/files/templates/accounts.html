@@ -3,7 +3,7 @@
   <div class="container">
     <div class="row">
       <div class="col-sm col-md-4">
-        <img class="rounded" title="My Image" src="{{ url_for('static', filename='images/Shops/' + current_user.shopLogo ) }}">
+        <img class="img-thumbnail rounded float-left" title="My Shop Logo" alt="My Shop Logo" src="{{ shop_logo }}">
       </div>
       <div class="col-sm col-md-4">
         <h2 class="account-heading">{{ current_user.shopName }}</h2>

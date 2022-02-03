@@ -1,11 +1,9 @@
 from flask import Blueprint, flash, render_template, redirect, url_for, request, current_app
 from files.forms import ShopAccount, Login
 from flask_login import login_required, current_user, logout_user, login_user
-from files import db
 from files.models import Seller
 import sqlite3
-from files.utils import add_seller
-
+from files.utils import add_seller, get_logo_url
 
 user = Blueprint('user', __name__)
 
@@ -19,8 +17,9 @@ def home():
     data = (int(current_user.id), )
     cursor.execute(query, data)
     prods = cursor.fetchall()
-    return render_template('accounts.html',  prods = prods, title = "Seller-Account", accountPage = True, prodDirPath = "C:\\Users\\siddpc\\OneDrive\\Desktop\\Projects\\offline-e-commerce\\databases\\images\\products\\"
-)
+    shop_logo = get_logo_url(current_user.shopLogo)
+    print(shop_logo)
+    return render_template('accounts.html',  prods = prods, shop_logo = shop_logo, title = "Seller-Account", accountPage = True, prodDirPath = "C:\\Users\\siddpc\\OneDrive\\Desktop\\Projects\\offline-e-commerce\\databases\\images\\products\\")
 
 @user.route("/create-seller", methods = ["GET", "POST"])
 def register():
