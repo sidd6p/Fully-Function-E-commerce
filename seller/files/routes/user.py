@@ -4,7 +4,7 @@ from flask_login import login_required, current_user, logout_user, login_user
 from files import db
 from files.models import Seller
 import sqlite3
-from files.utils import saveShopImage, add_seller
+from files.utils import add_seller
 
 
 user = Blueprint('user', __name__)
