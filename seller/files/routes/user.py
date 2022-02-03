@@ -6,6 +6,7 @@ from files.utils import add_seller, get_products_details
 
 user = Blueprint('user', __name__)
 
+
 @user.route("/")
 @user.route("/seller-home")
 @login_required
@@ -15,6 +16,8 @@ def home():
     print("\n\n\n")
     return render_template('accounts.html',  prods = prods, title = "Seller-Account", accountPage = True)
 
+
+
 @user.route("/create-seller", methods = ["GET", "POST"])
 def register():
     form = ShopAccount()
@@ -23,6 +26,7 @@ def register():
         flash("Your seller home has been created successfully", 'info')
         return redirect(url_for("user.home"))
     return render_template('create-shop.html', form = form,  title = "Create Your Shop", createShopPage = True, seller = True)
+
 
 
 @user.route("/seller-login", methods = ["POST", "GET"])
@@ -40,6 +44,8 @@ def login():
         else:
             flash('Login Unsuccessful. Please check email and password', 'danger')
     return render_template('login.html', form = form,  title = "Seller-Login", loginPage = True, seller = True)
+
+
 
 @user.route("/seller-logout")
 @login_required

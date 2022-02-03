@@ -11,8 +11,6 @@ class Config(object):
         'sellerdb' : "sqlite:///databases/seller.db",
     }
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    # UPLOAD_FOLDER = "C:\Users\siddpc\OneDrive\Desktop\Projects\offline-e-commerce\images\products"
-
 
 def get_client():
     conn_str = "DefaultEndpointsProtocol=https;AccountName=learn10sg;AccountKey=AHTtAU6SOIzK7jqLwgyVm88BTyqNgduQkc6jPXj30RWgPOAh7TGzdTGYfKxSSlU1mq9a9H/14ZltDPJJMSfxJQ==;EndpointSuffix=core.windows.net" # retrieve the connection string from the environment variable

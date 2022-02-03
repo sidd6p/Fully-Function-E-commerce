@@ -92,11 +92,30 @@ def get_products_details(current_user_id: int):
         })
     return prods
 
-        # productImage = saveProdImage(form.productPhoto.data)
-        # connection = sqlite3.connect(r'C:\Users\siddpc\OneDrive\Desktop\Projects\offline-e-commerce\databases\product.db')
-        # cursor = connection.cursor()
-        # query = "INSERT INTO products (productName, productType, productPhoto, productDesc, productPrice, shopName, sellerID, sellerAddress) VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
-        # data =  (form.productName.data, form.productType.data, productImage, form.productDesc.data, int(form.productPrice.data), current_user.shopName, int(current_user.id), current_user.address, )
-        # cursor.execute(query, data)
-        # connection.commit()
-        # connection.close()
+
+def update_order_status(action):
+        query = " UPDATE orders SET status = ? WHERE id = ?"
+        data = (str(action[0]), int(action[1]),)
+        dbquery(query, data)
+
+
+
+def get_all_orders():
+    connection = sqlite3.connect(config.PROD_DB)
+    cursor = connection.cursor()
+    query = "SELECT products.productName, products.productPhoto, orders.buyerName, orders.buyerEmail, orders.id, orders.status, orders.productID\
+        FROM products INNER JOIN orders ON products.sellerID = orders.sellerID WHERE orders.sellerID = (?) AND orders.productID = products.id AND orders.status <> 'Received' AND orders.status <> 'Cancelled'"
+    data = (int(current_user.id), )
+    cursor.execute(query, data)
+    orders = cursor.fetchall()
+    return orders
+
+def get_orders_history():
+    connection = sqlite3.connect(r'C:\Users\siddpc\OneDrive\Desktop\Projects\offline-e-commerce\databases\product.db')
+    cursor = connection.cursor()
+    query = "SELECT products.productName, products.productPhoto, orders.buyerName, orders.buyerEmail, orders.id, orders.status, orders.productID\
+         FROM products INNER JOIN orders ON orders.productID = products.id WHERE orders.sellerID = (?) AND (orders.status = 'Received' OR orders.status = 'Cancelled')"
+    data = (int(current_user.id), )
+    cursor.execute(query, data)
+    orders = cursor.fetchall()
+    return orders

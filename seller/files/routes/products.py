@@ -1,11 +1,11 @@
 from flask import Blueprint, flash, render_template, redirect, url_for, request, Blueprint
 from files.forms import UploadProduct
-from flask_login import login_required, current_user
-import sqlite3
-from files.utils import dbquery, add_product
+from flask_login import login_required
+from files.utils import add_product, update_order_status, get_all_orders, get_orders_history
 
 
 products = Blueprint('products', __name__)
+
 
 @products.route("/upload-Products", methods = ["GET", "POST"])
 @login_required
@@ -18,33 +18,22 @@ def uploadProd():
     return render_template('upload-product.html', form = form,  title = "Upload Product", uploadProdPage = True, seller = True)
     
 
+
 @products.route("/orders", methods = ["POST", "GET"])
 @login_required
 def order():
-    connection = sqlite3.connect(r'C:\Users\siddpc\OneDrive\Desktop\Projects\offline-e-commerce\databases\product.db')
-    cursor = connection.cursor()
-    query = "SELECT  products.productName, products.productPhoto, orders.buyerName, orders.buyerEmail, orders.id, orders.status, orders.productID\
-        FROM products INNER JOIN orders ON products.sellerID = orders.sellerID WHERE orders.sellerID = (?) AND orders.productID = products.id AND orders.status <> 'Received' AND orders.status <> 'Cancelled'"
-    data = (int(current_user.id), )
-    cursor.execute(query, data)
-    orders = cursor.fetchall()
+    orders = get_all_orders()
     if request.method == "POST":
         action = request.form.get("selleraction").split()
-        query = " UPDATE orders SET status = ? WHERE id = ?"
-        data = (str(action[0]), int(action[1]),)
-        dbquery(query, data)
+        update_order_status(action)
         flash("Order (Order Id: {}) has been {}".format(action[1], action[0]), 'info')
         return redirect(url_for("products.order"))
     return render_template("orders.html", orders = orders, title = "Your Orders", orderPage = True)
 
+
+
 @products.route("/history")
 @login_required
 def history():
-    connection = sqlite3.connect(r'C:\Users\siddpc\OneDrive\Desktop\Projects\offline-e-commerce\databases\product.db')
-    cursor = connection.cursor()
-    query = "SELECT products.productName, products.productPhoto, orders.buyerName, orders.buyerEmail, orders.id, orders.status, orders.productID\
-         FROM products INNER JOIN orders ON orders.productID = products.id WHERE orders.sellerID = (?) AND (orders.status = 'Received' OR orders.status = 'Cancelled')"
-    data = (int(current_user.id), )
-    cursor.execute(query, data)
-    orders = cursor.fetchall()
+    orders = get_orders_history()
     return render_template("orders.html", orders = orders, title = "Your History", historyPage = True)
