@@ -1,7 +1,28 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, IntegerField, TextAreaField, PasswordField, EmailField, BooleanField
-from wtforms.validators import Length, DataRequired, Email, EqualTo, NumberRange, ValidationError
+
 from files.models import Buyer
+
+from wtforms import     (
+                        StringField, 
+                        SubmitField, 
+                        IntegerField, 
+                        TextAreaField, 
+                        PasswordField, 
+                        EmailField, 
+                        BooleanField
+                        )
+
+from wtforms.validators import  (
+                                Length, 
+                                DataRequired, 
+                                Email, 
+                                EqualTo, 
+                                NumberRange, 
+                                ValidationError
+                                )
+
+
+
 
 class BuyerAccount(FlaskForm):
     buyerFirstName = StringField("First Name", validators = [DataRequired(), Length(min = 5, max = 50, message = "Field length shoud be bewteen  5 to 50 characters")])

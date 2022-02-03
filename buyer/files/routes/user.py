@@ -1,5 +1,7 @@
 from files import utils
+
 from files.models import Buyer
+
 from flask import   (
                     Blueprint,
                     flash,
@@ -25,6 +27,7 @@ from files.forms import     (
 
 
 user = Blueprint('user', __name__)
+
 
 
 #################### HOME-ROUTE #################### 

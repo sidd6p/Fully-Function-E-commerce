@@ -1,23 +1,47 @@
-from flask import Blueprint, flash, render_template, redirect, url_for, request
-from files.forms import ShopAccount, Login
-from flask_login import login_required, current_user, logout_user, login_user
 from files.models import Seller
-from files.utils import add_seller, get_products_details
+
+from flask import   (
+                    Blueprint, 
+                    flash, 
+                    render_template, 
+                    redirect, 
+                    url_for, 
+                    request
+                    )
+
+from files.forms import (
+                        ShopAccount, 
+                        Login
+                        )
+
+from flask_login import (
+                        login_required,
+                        current_user, 
+                        logout_user, 
+                        login_user
+                        )
+
+from files.utils import (
+                        add_seller, 
+                        get_products_details
+                        )
+
+
 
 user = Blueprint('user', __name__)
 
 
+
+################ HOME_ROUTE ################
 @user.route("/")
 @user.route("/seller-home")
 @login_required
 def home():
     prods = get_products_details(current_user.id)
-    print(prods)
-    print("\n\n\n")
     return render_template('accounts.html',  prods = prods, title = "Seller-Account", accountPage = True)
 
 
-
+################ REGISRTATION-ROUTE ################
 @user.route("/create-seller", methods = ["GET", "POST"])
 def register():
     form = ShopAccount()
@@ -28,7 +52,7 @@ def register():
     return render_template('create-shop.html', form = form,  title = "Create Your Shop", createShopPage = True, seller = True)
 
 
-
+################ LOGIN-ROUTE ################
 @user.route("/seller-login", methods = ["POST", "GET"])
 def login():
     if current_user.is_authenticated:
@@ -46,7 +70,7 @@ def login():
     return render_template('login.html', form = form,  title = "Seller-Login", loginPage = True, seller = True)
 
 
-
+################ LOGOUT-ROUTE ################
 @user.route("/seller-logout")
 @login_required
 def logout():

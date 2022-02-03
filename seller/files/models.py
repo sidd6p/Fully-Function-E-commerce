@@ -1,9 +1,13 @@
 from files import db, loginManager
 from flask_login import UserMixin
 
+
+
 @loginManager.user_loader
 def loadUser(buyerId):
     return Seller.query.get(int(buyerId))
+
+
 
 class Seller(db.Model, UserMixin):
     __bind_key__ = 'sellerdb'

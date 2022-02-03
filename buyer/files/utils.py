@@ -4,6 +4,9 @@ from files import db
 from files.config import PRODUCT_DATABASE, get_cursor
 from flask_login import current_user
 
+
+
+
 def db_query(query, data):
     dbAddress = PRODUCT_DATABASE
     connection = sqlite3.connect(dbAddress)
@@ -12,9 +15,11 @@ def db_query(query, data):
     connection.commit()
     connection.close()
 
+
 def update_status(data):
     query = "UPDATE orders SET status = ? WHERE id = ?"
     db_query(query, data)
+
 
 def place_order(data):
     query = "INSERT INTO orders (productID, buyerID, sellerID, buyerName, buyerEmail) VALUES (?, ?, ?, ?, ?)"
@@ -25,13 +30,16 @@ def add_to_cart(data):
     query = """ INSERT OR REPLACE into basket VALUES (?, ?, ?)"""
     db_query(query, data)
 
+
 def delete_from_cart(data):
     query = "DELETE FROM basket WHERE productID = ? AND buyerID = ?"
     db_query(query, data)
 
+
 def add_to_wishlist(data):
     query = """ INSERT OR REPLACE into basket VALUES (?, ?, ?)"""
     db_query(query, data)
+
 
 def delete_from_wishlist(data):
     query = "DELETE FROM basket WHERE productID = ? AND buyerID = ?"

@@ -3,13 +3,19 @@ from dotenv import load_dotenv
 import sqlite3
 import os
 
+
+
 load_dotenv()
+
+
 
 PRODUCT_DATABASE = os.getenv(r'PRODUCT_DATABASE')
 CONNECT_STRING = os.getenv('CONNECT_STRING')
 CONTAINER_NAME = os.getenv('CONTAINER_NAME')
 SECRET_KEY = os.getenv('SECRET_KEY')
 BUYER_DATABASE = os.getenv('BUYER_DATABASE')
+
+
 
 class Config(object):
     SECRET_KEY = SECRET_KEY

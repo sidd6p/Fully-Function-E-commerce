@@ -31,6 +31,7 @@ from files.utils import (
 orders = Blueprint('orders', __name__)
 
 
+
 #################### WHISHLIST-ROUTE #################### 
 @orders.route("/wishlist-page")
 @login_required
