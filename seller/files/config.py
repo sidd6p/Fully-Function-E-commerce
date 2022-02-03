@@ -1,6 +1,9 @@
 import os
 from azure.storage.blob import BlobServiceClient
+import sqlite3
 
+
+PROD_DB = r'C:\Users\siddpc\OneDrive\Desktop\Projects\offline-e-commerce\databases\product.db'
 
 class Config(object):
     SECRET_KEY = os.environ.get('secrteKey5H') or "ohe#%DWM^&5ERASbF_(DSA!@$>^WSGssaf"
@@ -18,3 +21,8 @@ def get_client():
     container_service_client = blob_service_client.get_container_client(container=container)
     container_service_client.get_container_properties()
     return container_service_client
+
+def get_cursor():
+    connection = sqlite3.connect(PROD_DB)
+    cursor = connection.cursor()
+    return cursor

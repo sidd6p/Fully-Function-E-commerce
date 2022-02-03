@@ -2,7 +2,7 @@ from flask import Blueprint, flash, render_template, redirect, url_for, request,
 from files.forms import UploadProduct
 from flask_login import login_required, current_user
 import sqlite3
-from files.utils import dbquery, saveProdImage
+from files.utils import dbquery, add_product
 
 
 products = Blueprint('products', __name__)
@@ -12,14 +12,7 @@ products = Blueprint('products', __name__)
 def uploadProd():
     form = UploadProduct()
     if form.validate_on_submit():
-        productImage = saveProdImage(form.productPhoto.data)
-        connection = sqlite3.connect(r'C:\Users\siddpc\OneDrive\Desktop\Projects\offline-e-commerce\databases\product.db')
-        cursor = connection.cursor()
-        query = "INSERT INTO products (productName, productType, productPhoto, productDesc, productPrice, shopName, sellerID, sellerAddress) VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
-        data =  (form.productName.data, form.productType.data, productImage, form.productDesc.data, int(form.productPrice.data), current_user.shopName, int(current_user.id), current_user.address, )
-        cursor.execute(query, data)
-        connection.commit()
-        connection.close()
+        add_product(form)
         flash ("Product has been uploaded successfully", 'info')
         return redirect(url_for("user.home"))
     return render_template('upload-product.html', form = form,  title = "Upload Product", uploadProdPage = True, seller = True)

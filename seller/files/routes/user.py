@@ -1,9 +1,8 @@
-from flask import Blueprint, flash, render_template, redirect, url_for, request, current_app
+from flask import Blueprint, flash, render_template, redirect, url_for, request
 from files.forms import ShopAccount, Login
 from flask_login import login_required, current_user, logout_user, login_user
 from files.models import Seller
-import sqlite3
-from files.utils import add_seller, get_logo_url
+from files.utils import add_seller, get_products_details
 
 user = Blueprint('user', __name__)
 
@@ -11,15 +10,10 @@ user = Blueprint('user', __name__)
 @user.route("/seller-home")
 @login_required
 def home():
-    connection = sqlite3.connect(r'C:\Users\siddpc\OneDrive\Desktop\Projects\offline-e-commerce\databases\product.db')
-    cursor = connection.cursor()
-    query = "SELECT * FROM products WHERE sellerID = (?)"
-    data = (int(current_user.id), )
-    cursor.execute(query, data)
-    prods = cursor.fetchall()
-    shop_logo = get_logo_url(current_user.shopLogo)
-    print(shop_logo)
-    return render_template('accounts.html',  prods = prods, shop_logo = shop_logo, title = "Seller-Account", accountPage = True, prodDirPath = "C:\\Users\\siddpc\\OneDrive\\Desktop\\Projects\\offline-e-commerce\\databases\\images\\products\\")
+    prods = get_products_details(current_user.id)
+    print(prods)
+    print("\n\n\n")
+    return render_template('accounts.html',  prods = prods, title = "Seller-Account", accountPage = True)
 
 @user.route("/create-seller", methods = ["GET", "POST"])
 def register():

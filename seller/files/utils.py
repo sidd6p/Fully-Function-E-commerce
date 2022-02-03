@@ -1,13 +1,13 @@
 import sqlite3
 import secrets
 import os
-from PIL import Image
 from .models import Seller
 from files import db, config
-import io
+from flask_login import current_user
+
 
 def dbquery(query, data):
-    dbAddress = r'C:\Users\siddpc\OneDrive\Desktop\Projects\offline-e-commerce\databases\product.db'
+    dbAddress = config.PROD_DB
     connection = sqlite3.connect(dbAddress)
     cursor = connection.cursor()
     cursor.execute(query, data)
@@ -42,12 +42,61 @@ def add_seller(form):
                     state = form.state.data, \
                     pin = form.pin.data, \
                     shopName= form.shopName.data, \
-                    shopLogo = shopLogo)
+                    shopLogo = get_image_url(shopLogo))
     db.session.add(new_seller)
     db.session.commit()
 
 
-def get_logo_url(logo_name):
+def add_product(form):
+    productImage = saveProdImage(form.productPhoto.data)
+    connection = sqlite3.connect(config.PROD_DB)
+    cursor = connection.cursor()
+    query = """ INSERT INTO products 
+                (productName, 
+                productType, 
+                productPhoto, 
+                productDesc, 
+                productPrice, 
+                shopName, 
+                sellerID, 
+                sellerAddress)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?) """
+    data =  (form.productName.data, form.productType.data, get_image_url(productImage), form.productDesc.data, int(form.productPrice.data), current_user.shopName, int(current_user.id), current_user.address, )
+    cursor.execute(query, data)
+    connection.commit()
+    connection.close()
+
+
+def get_image_url(image_name):
     container_client = config.get_client()
-    logo_url = container_client.get_blob_client(blob = logo_name).url
+    logo_url = container_client.get_blob_client(blob = image_name).url
     return logo_url
+
+def get_products_details(current_user_id: int):
+    cursor = config.get_cursor()
+    query = "SELECT * FROM products WHERE sellerID = (?)"
+    data = (current_user_id, )
+    cursor.execute(query, data)
+    results = cursor.fetchall()
+    print(results)
+    prods = []
+    for result in results:
+        prods.append({
+            "prod_id" : result[0],
+            "prod_name" : result[1],
+            "prod_type" : result[2],
+            "prod_img" : result[3],
+            "prod_desc": result[4], 
+            "prod_price": result[5],
+
+        })
+    return prods
+
+        # productImage = saveProdImage(form.productPhoto.data)
+        # connection = sqlite3.connect(r'C:\Users\siddpc\OneDrive\Desktop\Projects\offline-e-commerce\databases\product.db')
+        # cursor = connection.cursor()
+        # query = "INSERT INTO products (productName, productType, productPhoto, productDesc, productPrice, shopName, sellerID, sellerAddress) VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
+        # data =  (form.productName.data, form.productType.data, productImage, form.productDesc.data, int(form.productPrice.data), current_user.shopName, int(current_user.id), current_user.address, )
+        # cursor.execute(query, data)
+        # connection.commit()
+        # connection.close()
