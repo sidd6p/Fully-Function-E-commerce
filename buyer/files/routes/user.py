@@ -1,27 +1,42 @@
 from files import utils
-from flask import Blueprint, flash, render_template, redirect, url_for, request, Blueprint
-from flask_login import login_required, current_user, login_user, logout_user
-from files.forms import BuyerAccount, Login
 from files.models import Buyer
-from files.config import DB_ADDRESS
-import sqlite3
+from flask import   (
+                    Blueprint,
+                    flash,
+                    render_template,
+                    redirect,
+                    url_for,
+                    request,
+                    Blueprint
+                    )
+
+from flask_login import     (
+                            login_required,
+                            current_user, 
+                            login_user, 
+                            logout_user
+                            )
+
+from files.forms import     (
+                            BuyerAccount, 
+                            Login
+                            )
+
 
 
 user = Blueprint('user', __name__)
 
 
+#################### HOME-ROUTE #################### 
 @user.route("/")
 @user.route("/buyer-home")
 @user.route("/buy")
 def home():
-    connection = sqlite3.connect(DB_ADDRESS)
-    cursor = connection.cursor()
-    query = "SELECT * FROM products"
-    cursor.execute(query)
-    prods = cursor.fetchall()
+    prods = utils.get_products_details()
     return render_template("show-products.html", prods = prods, title = "Prodcts", allProdsPage = True)
 
 
+#################### REGISTRATION-ROUTE ####################
 @user.route("/create-buyer", methods = ["GET", "POST"])
 def register():
     form = BuyerAccount()
@@ -31,6 +46,8 @@ def register():
         return redirect(url_for("buyer.home"))
     return render_template('create-buyer.html', form = form,  title = "Create Your Buyer Account", createBuyerPage = True)
 
+
+#################### LOGIN-ROUTE ####################
 @user.route("/buyer-login", methods = ["POST", "GET"])
 def login():
     if current_user.is_authenticated:
@@ -48,6 +65,7 @@ def login():
     return render_template('login.html', form = form,  title = "Buyer-Login", loginPage = True)
 
 
+#################### LOGOUT-ROUTE ####################
 @user.route("/buyer-logout")
 @login_required
 def logout():
@@ -55,6 +73,7 @@ def logout():
     return redirect(url_for('user.home'))
 
 
+#################### ACCOUNT-ROUTE ####################
 @user.route('/account', methods=['GET', 'POST'])
 @login_required
 def account():
