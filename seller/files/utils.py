@@ -7,7 +7,7 @@ from flask_login import current_user
 
 
 def dbquery(query, data):
-    dbAddress = config.PROD_DB
+    dbAddress = config.PRODUCT_DATABASE
     connection = sqlite3.connect(dbAddress)
     cursor = connection.cursor()
     cursor.execute(query, data)
@@ -49,7 +49,7 @@ def add_seller(form):
 
 def add_product(form):
     productImage = saveProdImage(form.productPhoto.data)
-    connection = sqlite3.connect(config.PROD_DB)
+    connection = sqlite3.connect(config.PRODUCT_DATABASE)
     cursor = connection.cursor()
     query = """ INSERT INTO products 
                 (productName, 
@@ -101,7 +101,7 @@ def update_order_status(action):
 
 
 def get_all_orders():
-    connection = sqlite3.connect(config.PROD_DB)
+    connection = sqlite3.connect(config.PRODUCT_DATABASE)
     cursor = connection.cursor()
     query = "SELECT products.productName, products.productPhoto, orders.buyerName, orders.buyerEmail, orders.id, orders.status, orders.productID\
         FROM products INNER JOIN orders ON products.sellerID = orders.sellerID WHERE orders.sellerID = (?) AND orders.productID = products.id AND orders.status <> 'Received' AND orders.status <> 'Cancelled'"
