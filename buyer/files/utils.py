@@ -12,37 +12,94 @@ def db_query(query, data):
     connection = sqlite3.connect(dbAddress)
     cursor = connection.cursor()
     cursor.execute(query, data)
+    result = cursor.fetchall()
     connection.commit()
     connection.close()
+    return result
 
 
-def update_status(data):
+def update_status(action):
     query = "UPDATE orders SET status = ? WHERE id = ?"
+    data = data = (str(action[1]), int(action[2]), )
     db_query(query, data)
 
 
-def place_order(data):
-    query = "INSERT INTO orders (productID, buyerID, sellerID, buyerName, buyerEmail) VALUES (?, ?, ?, ?, ?)"
+def place_order(action):
+    if len(action) == 2:
+        place_bulk_order(action[1])
+    else:
+        data = (int(action[1]), int(current_user.id), int(action[2]), current_user.fname, current_user.email, ) 
+        query = "INSERT INTO orders (productID, buyerID, sellerID, buyerName, buyerEmail) VALUES (?, ?, ?, ?, ?)"
+        db_query(query, data)
+        query = """ DELETE FROM basket
+                    WHERE productID = ? AND buyerID = ? AND 
+                    EXISTS(SELECT 1 FROM basket WHERE productID = ? AND buyerID = ? LIMIT 1) """
+        data = (int(action[1]), int(current_user.id), int(action[1]), int(current_user.id), )
+        db_query(query, data)
+
+
+def place_bulk_order(bType):
+    print("\n\n\n")
+    query = "SELECT productID FROM basket WHERE buyerID = ? AND bType = ?"
+    data = (int(current_user.id), str(bType), ) 
+    results = db_query(query, data)
+    actions = []
+    query = "SELECT id, sellerID FROM products WHERE id = ?"
+    for result in results:
+        res = db_query(query, (int(result[0]), ))
+        actions.append((-1, res[0][0], res[0][1]))
+    print(actions)
+    print("\n\n\n")
+    for action in actions:
+        place_order(action)
+
+
+def add_to_cart(action):
+    if len(action) == 1:
+        add_all_to_cart()
+    else:
+        query = """ INSERT OR REPLACE into basket VALUES (?, ?, ?)"""
+        data = (int(action[1]), int(current_user.id), "c", ) 
+        db_query(query, data)
+
+
+def add_all_to_cart():
+    query = """ UPDATE basket SET bType = 'c' WHERE buyerID = ? """
+    data = (int(current_user.id), )     
     db_query(query, data)
 
 
-def add_to_cart(data):
-    query = """ INSERT OR REPLACE into basket VALUES (?, ?, ?)"""
+def delete_from_cart(action):
+    if len(action) == 1:
+        query = "DELETE FROM basket WHERE buyerID = ?"
+        data = (int(current_user.id), ) 
+    else:
+        query = "DELETE FROM basket WHERE productID = ? AND buyerID = ?"
+        data = (int(action[1]), int(current_user.id), ) 
     db_query(query, data)
 
 
-def delete_from_cart(data):
-    query = "DELETE FROM basket WHERE productID = ? AND buyerID = ?"
+def add_to_wishlist(action):
+    if len(action) == 1:
+        add_all_to_wishlist()
+    else:        
+        query = """ INSERT OR REPLACE into basket VALUES (?, ?, ?)"""
+        data = (int(action[1]), int(current_user.id), "w", )     
+        db_query(query, data)
+
+def add_all_to_wishlist():
+    query = """ UPDATE basket SET bType = 'w' WHERE buyerID = ? """
+    data = (int(current_user.id), )     
     db_query(query, data)
 
 
-def add_to_wishlist(data):
-    query = """ INSERT OR REPLACE into basket VALUES (?, ?, ?)"""
-    db_query(query, data)
-
-
-def delete_from_wishlist(data):
-    query = "DELETE FROM basket WHERE productID = ? AND buyerID = ?"
+def delete_from_wishlist(action):
+    if len(action) == 1:
+        query = "DELETE FROM basket WHERE buyerID = ?"
+        data = (int(current_user.id), ) 
+    else:
+        query = "DELETE FROM basket WHERE productID = ? AND buyerID = ?"
+        data = (int(action[1]), int(current_user.id), ) 
     db_query(query, data)
 
 

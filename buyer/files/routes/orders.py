@@ -10,7 +10,6 @@ from flask import   (
 
 from flask_login import (
                         login_required,
-                        current_user
                         )  
 
 from files.utils import (
@@ -63,28 +62,22 @@ def buyerAction():
     if request.method == "POST":
         action = request.form.get("buyeraction").split()
         if action[0] == "0":
-            data = (str(action[1]), int(action[2]), ) 
-            update_status(data)
+            update_status(action)
             flash("Your order (Order Id: {}) has been {}".format(int(action[2]), str(action[1])), 'info') 
         if action[0] == "1":
-            data = (int(action[1]), int(current_user.id), int(action[2]), current_user.fname, current_user.email, ) 
-            place_order(data)
+            place_order(action)
             flash("Your order has been placed", 'info')
         if action[0] == "2":
-            data = (int(action[1]), int(current_user.id), "c", ) 
-            add_to_cart(data)
+            add_to_cart(action)
             flash("Item has been added to your cart", 'info')
         if action[0] == "3":
-            data = (int(action[1]), int(current_user.id), "w", ) 
-            add_to_wishlist(data)
+            add_to_wishlist(action)
             flash("Item has been added to your wishlist", 'info')    
         if action[0] == "-2":
-            data = (int(action[1]), int(current_user.id), ) 
-            delete_from_cart(data)
+            delete_from_cart(action)
             flash("Item has been removed from your cart", 'info')    
         if action[0] == "-3":
-            data = (int(action[1]), int(current_user.id), ) 
-            delete_from_wishlist(data)
+            delete_from_wishlist(action)
             flash("Item has been removed from your wishlist", 'info')   
     return redirect(url_for('user.home'))
 
