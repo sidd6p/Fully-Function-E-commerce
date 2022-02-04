@@ -36,18 +36,18 @@ user = Blueprint('user', __name__)
 @user.route("/buy")
 def home():
     prods = utils.get_products_details()
-    return render_template("show-products.html", prods = prods, title = "Prodcts", allProdsPage = True)
+    return render_template("show-products.html", prods = prods, title = "Products", allProdsPage = True)
 
 
 #################### SERACH-PRODUCT-ROUTE #################### 
 @user.route("/product", methods=["POST", "GET"])
 def product():
     if request.method == "POST":            
-        product = request.form['productNeed']
-        prods = utils.get_this_product(product)
+        this_product = request.form['productNeed']
+        prods = utils.get_this_product(this_product.strip())
     else:
         return redirect(url_for('user.home'))
-    return render_template("show-products.html", prods = prods, title = "Prodcts", allProdsPage = True)
+    return render_template("show-products.html", prods = prods, title = this_product or "Products", allProdsPage = True)
 
 
 #################### REGISTRATION-ROUTE ####################

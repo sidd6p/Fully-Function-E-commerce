@@ -39,11 +39,13 @@ user = Blueprint('user', __name__)
 @login_required
 def home():
     if request.method == "GET":
+        search = "Your Products"
         prods = get_products_details(current_user.id)
     else:
-        product = request.form['productNeed']
-        prods = get_this_product(current_user.id, product)
-    return render_template('accounts.html',  prods = prods, title = "Seller-Account", accountPage = True)
+        this_product = request.form['productNeed']
+        search = this_product
+        prods = get_this_product(current_user.id, this_product.strip())
+    return render_template('accounts.html',  prods = prods, title = "Seller-Account", search = search or "Your Products", accountPage = True)
 
 
 ################ REGISRTATION-ROUTE ################
