@@ -107,6 +107,34 @@ def get_products_details(current_user_id: int):
     return prods
 
 
+def get_this_product(current_user_id: int, data):
+    cursor = config.get_cursor()
+    data = "%{0}%".format(data)
+    query = "SELECT * FROM products\
+            WHERE\
+            (sellerID = {}) AND (\
+            ProductName LIKE '{}' OR\
+            productType LIKE '{}' OR\
+            productDesc LIKE '{}')\
+            ORDER BY productName, productType, productDesc"\
+            .format(current_user_id, data, data, data, data, data)
+    cursor.execute(query)
+    results = cursor.fetchall()
+    prods = []
+    for result in results:
+        prods.append({
+            "prod_id" : result[0],
+            "prod_name" : result[1],
+            "prod_type" : result[2],
+            "prod_img" : result[3],
+            "prod_desc": result[4], 
+            "prod_price": result[5],
+            "prod_shop": result[6],
+            "seller_id" : result[7],
+            "prod_seller" : result[8]
+        })
+    return prods
+
 def update_order_status(action):
         query = " UPDATE orders SET status = ? WHERE id = ?"
         data = (str(action[0]), int(action[1]),)

@@ -79,6 +79,36 @@ def get_products_details():
     return prods
 
 
+def get_this_product(data):
+    cursor = get_cursor()
+    print(type(data))
+    data = "%{}%".format(data)
+    query = "SELECT * FROM products\
+            WHERE \
+            (ProductName LIKE '{}') OR\
+            (productType LIKE '{}') OR\
+            (productDesc LIKE '{}') OR\
+            (shopName LIKE '{}') OR\
+            (sellerAddress LIKE '{}')\
+            ORDER BY productName, productType, shopName, sellerAddress, productDesc"\
+            .format(data, data, data, data, data)
+    cursor.execute(query)
+    results = cursor.fetchall()
+    prods = []
+    for result in results:
+        prods.append({
+            "prod_id" : result[0],
+            "prod_name" : result[1],
+            "prod_type" : result[2],
+            "prod_img" : result[3],
+            "prod_desc": result[4], 
+            "prod_price": result[5],
+            "prod_shop": result[6],
+            "seller_id" : result[7],
+            "prod_seller" : result[8]
+        })
+    return prods
+
 def get_wish_details():
     connection = sqlite3.connect(PRODUCT_DATABASE)
     cursor = connection.cursor()

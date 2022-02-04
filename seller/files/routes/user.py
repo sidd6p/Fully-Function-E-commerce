@@ -23,7 +23,8 @@ from flask_login import (
 
 from files.utils import (
                         add_seller, 
-                        get_products_details
+                        get_products_details,
+                        get_this_product
                         )
 
 
@@ -33,11 +34,15 @@ user = Blueprint('user', __name__)
 
 
 ################ HOME_ROUTE ################
-@user.route("/")
-@user.route("/seller-home")
+@user.route("/", methods=["POST", "GET"])
+@user.route("/seller-home", methods=["POST", "GET"])
 @login_required
 def home():
-    prods = get_products_details(current_user.id)
+    if request.method == "GET":
+        prods = get_products_details(current_user.id)
+    else:
+        product = request.form['productNeed']
+        prods = get_this_product(current_user.id, product)
     return render_template('accounts.html',  prods = prods, title = "Seller-Account", accountPage = True)
 
 

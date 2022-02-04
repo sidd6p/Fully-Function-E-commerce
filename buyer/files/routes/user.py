@@ -39,6 +39,17 @@ def home():
     return render_template("show-products.html", prods = prods, title = "Prodcts", allProdsPage = True)
 
 
+#################### SERACH-PRODUCT-ROUTE #################### 
+@user.route("/product", methods=["POST", "GET"])
+def product():
+    if request.method == "POST":            
+        product = request.form['productNeed']
+        prods = utils.get_this_product(product)
+    else:
+        return redirect(url_for('user.home'))
+    return render_template("show-products.html", prods = prods, title = "Prodcts", allProdsPage = True)
+
+
 #################### REGISTRATION-ROUTE ####################
 @user.route("/create-buyer", methods = ["GET", "POST"])
 def register():

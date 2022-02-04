@@ -1,7 +1,7 @@
 <header>
     <nav class="navbar navbar-light" style="background-color: #e3f2fd">
         <ul class="nav nav-pills">
-            <li class="nav-item"><a href="{{ url_for('user.home') }}" class="nav-link {% if allProdsPage %}active{% endif %}">Search Products</a></li>
+            <li class="nav-item"><a href="{{ url_for('user.home') }}" class="nav-link {% if allProdsPage %}active{% endif %}">All Products</a></li>
             {% if current_user.is_authenticated %}
               <li class="nav-item"><a href="{{ url_for('user.account') }}" class="nav-link {% if accountPage %}active{% endif %}">Account</a></li>
               <li class="nav-item"><a href="{{ url_for('user.logout') }}" class="nav-link">LogOut</a></li>
@@ -10,6 +10,10 @@
               <li class="nav-item"><a href="{{ url_for('user.register') }}" class="nav-link {% if registerPage %}active{% endif %}">Register</a></li>
             {% endif %}
         </ul>
+        <form class="form-inline my-2 my-lg-0" action="{{ url_for('user.product') }}" method="post">
+          <input class="form-control mr-sm-2" name="productNeed" type="search" placeholder="Search Product" aria-label="Search" required>
+          <button class="btn btn-outline-info my-2 my-sm-0" type="submit">Go</button>
+        </form>
     </nav>
     <hr style="clear:both">
 </header>
