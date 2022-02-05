@@ -5,17 +5,17 @@
       <div class="col-sm col-md-8">
         <div class="content-section">
           <div class="media">
-            <img class="rounded-circle account-img" title="My Image" src="{{ url_for('static', filename='images/' + 'default1.jpg') }}">
             <div class="media-body">
-              <h2 class="account-heading">{{ current_user.username }}</h2>
+              <h2 class="account-heading">{{ current_user.fname }} {{ current_user.lname }}</h2>
               <p class="text-secondary">{{ current_user.email }}</p>
+              <p class="text-secondary"><i>{{ current_user.address }}</i></p>
            </div>
         </div>
       </div>
     </div>
     <div class="container">
       <div class="row">
-        <div class="col-sm col-md-8">
+        <div class="col-sm col-md-5">
           <div class="content-section">
             <p class='text-muted'>
               <ul class="list-group">

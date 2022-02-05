@@ -3,6 +3,7 @@ from files.models import Buyer
 from files import db
 from files.config import PRODUCT_DATABASE, get_cursor
 from flask_login import current_user
+from datetime import datetime
 
 
 
@@ -28,8 +29,9 @@ def place_order(action):
     if len(action) == 2:
         place_bulk_order(action[1])
     else:
-        data = (int(action[1]), int(current_user.id), int(action[2]), current_user.fname, current_user.email, ) 
-        query = "INSERT INTO orders (productID, buyerID, sellerID, buyerName, buyerEmail) VALUES (?, ?, ?, ?, ?)"
+        buyer_address = current_user.address + " " + current_user.city + " " + current_user.state + " " + str(current_user.pin)
+        data = (int(action[1]), int(current_user.id), int(action[2]), current_user.fname, current_user.email, datetime.utcnow(),buyer_address, ) 
+        query = "INSERT INTO orders (productID, buyerID, sellerID, buyerName, buyerEmail, orderTime, buyeAdd) VALUES (?, ?, ?, ?, ?, ?, ?)"
         db_query(query, data)
         query = """ DELETE FROM basket
                     WHERE productID = ? AND buyerID = ? AND 
@@ -185,9 +187,10 @@ def get_wish_details():
             "prod_img" : result[3],
             "prod_desc": result[4], 
             "prod_price": result[5],
-            "prod_shop": result[6],
-            "seller_id" : result[7],
-            "prod_seller" : result[8]
+            "seller_add" : result[6],
+            "prod_shop": result[7],
+            "seller_email" : result[8],
+            "seller_id" : result[9],
         })
     return prods
 
@@ -210,9 +213,10 @@ def get_cart_details():
             "prod_img" : result[3],
             "prod_desc": result[4], 
             "prod_price": result[5],
-            "prod_shop": result[6],
-            "seller_id" : result[7],
-            "prod_seller" : result[8]
+            "seller_add" : result[6],
+            "prod_shop": result[7],
+            "seller_email" : result[8],
+            "seller_id" : result[9],
         })
     return prods
 
@@ -235,11 +239,12 @@ def get_order_details():
             "prod_img" : result[3],
             "prod_desc": result[4], 
             "prod_price": result[5],
-            "prod_shop": result[6],
-            "seller_id" : result[7],
-            "prod_seller" : result[8],
-            "order_id": result[9],
-            "order_status" : result[15]
+            "seller_add" : result[6],
+            "prod_shop": result[7],
+            "seller_email" : result[8],
+            "seller_id" : result[9],
+            "order_id": result[10],
+            "order_status" : result[16]
         })
     return prods
 
@@ -262,10 +267,11 @@ def get_history_details():
             "prod_img" : result[3],
             "prod_desc": result[4], 
             "prod_price": result[5],
-            "prod_shop": result[6],
-            "prod_seller" : result[8],
-            "order_id": result[9],
-            "order_status" : result[15]
+            "seller_add": result[6],
+            "prod_shop": result[7],
+            "seller_email" : result[8],
+            "order_id": result[10],
+            "order_status" : result[16]
         })
     return prods
 

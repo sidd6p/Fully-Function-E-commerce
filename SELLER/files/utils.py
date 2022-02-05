@@ -1,6 +1,7 @@
 import sqlite3
 import secrets
 import os
+from unittest import result
 from .models import Seller
 from files import db, config
 from flask_login import current_user
@@ -153,12 +154,27 @@ def get_all_orders():
                 orders.buyerEmail,\
                 orders.id,\
                 orders.status,\
-                orders.productID\
+                orders.productID,\
+                orders.orderTime,\
+                orders.buyeAdd\
             FROM products INNER JOIN orders ON products.sellerID = orders.sellerID\
             WHERE orders.sellerID = (?) AND orders.productID = products.id AND orders.status <> 'Received' AND orders.status <> 'Cancelled'"
     data = (int(current_user.id), )
     cursor.execute(query, data)
-    orders = cursor.fetchall()
+    results = cursor.fetchall()
+    orders = []
+    for result in results:
+        orders.append({
+                    "productName" : result[0],
+                    "productPhoto" : result[1],
+                    "buyerName" : result[2],
+                    "buyerEmail" : result[3],
+                    "orderId" : result[4],
+                    "status" : result[5],
+                    "productID" : result[6],
+                    "orderTime" : result[7],
+                    "buyerAdd" : result[8]
+                    })
     return orders
 
 

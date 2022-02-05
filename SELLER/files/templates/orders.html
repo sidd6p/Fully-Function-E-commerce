@@ -9,16 +9,17 @@
             <div class="media-body">
               <div class="article-metadata">
                 <div class="row">
-                  <div class="col"><p>Order ID: {{ order[4] }}</p></div>
-                  <div class="col"><p>Product ID: {{ order[6] }}</p></div>
-                  <div class="col" style="background-color: rgba(72, 195, 195, 0.561); color: rgb(1, 104, 64); margin-top: 1%;">Status: {{ order[5] }}</div>
+                  <div class="col"><p>Order ID: {{ order.orderId }}</p></div>
+                  <div class="col"><p>Product ID: {{ order.productID }}</p></div>
+                  <div class="col" style="background-color: rgba(72, 195, 195, 0.561); color: rgb(1, 104, 64); margin-top: 1%;">Status: {{ order.status }}</div>
                 </div>
                 <hr>
-                <p>Product Name: {{ order[0] }} </p>
-                <span style="font-size: 15px; ">order Name: {{ order[2] }}</span><br>
-                <span style="font-size: 15px; ">order Email: {{ order[3] }}</span>
+                <p>Product Name: {{ order.productName }} </p>
+                <span style="font-size: 15px; ">Buyer Name: {{ order.buyerName }}</span><br>
+                <span style="font-size: 15px; ">Buyer Email: {{ order.buyerEmail }}</span><br>
+                <span style="font-size: 15px; ">Buyer Address: {{ order.buyerAdd }}</span>
                 <hr>
-                 <img class="rounded-circle account-img" title="My Image" src="{{ url_for('static', filename='images/' + 'default1.jpg') }}">
+                 <img class="img-thumbnail img-fluid" title="My Prod" height="200" width="400" src="{{ order.productPhoto }}">
                 <hr>
               </div>
             </div>
@@ -28,14 +29,14 @@
               <div class="form-row align-items-center">
                 <div class="col-auto">
                   <select class="custom-select" id="inlineFormCustomSelect" name="selleraction">
-                    {% if order[5] != "Accept" %}
-                      <option value="Accept {{ order[4] }}" selected>Accept</option>
+                    {% if order.status != "Accept" %}
+                      <option value="Accept {{ order.orderId }}" selected>Accept</option>
                     {% endif %}
-                    {% if order[5] != "Cancelled" %}
-                      <option value="Cancelled {{ order[4] }}">Cancell</option>
+                    {% if order.status != "Cancelled" %}
+                      <option value="Cancelled {{ order.orderId }}">Cancell</option>
                     {% endif %}
-                    {% if order[5] != "Out_for_Deilvery" %}
-                      <option value="Out_for_Deilvery {{ order[4] }}">Out for Deilvery</option>
+                    {% if order.status != "Out_for_Deilvery" %}
+                      <option value="Out_for_Deilvery {{ order.orderId }}">Out for Deilvery</option>
                     {% endif %}
                   </select>
                 </div>
