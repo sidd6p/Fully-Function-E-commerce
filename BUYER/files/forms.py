@@ -34,7 +34,7 @@ class BuyerAccount(FlaskForm):
     city = StringField("City", validators = [DataRequired(), Length(min = 5, max = 50, message = "Field length shoud be bewteen  5 to 50 characte")])
     state = StringField("State", validators = [DataRequired(), Length(min = 5, max = 50, message = "Field length shoud be bewteen  5 to 50 characte")])
     pin = IntegerField("PIN", validators = [DataRequired(), NumberRange(min = 000000, max = 999999)])
-    submit = SubmitField("Create Shop")
+    submit = SubmitField("Create Account")
 
     def validate_email(self, email):
         hasBuyer = Buyer.query.filter_by(email=email.data).first()
