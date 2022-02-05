@@ -2,11 +2,21 @@
 # Offline E-Commerce
 
 Offline E-Commerce, local shops are now in your phone
+
+Some points to consider
+- This application is based on microservices architecture, means SELLER and BUYER code can work independently and hence they both have different database
+- In upcoming deployment, Product database will be access through only API
+
+
+
+## Demo
+
+
+[Video Demo](https://youtu.be/6jAYiVFLnwM)
 ## Authors
 
 - [@sidd6p](https://github.com/sidd6p)
-
-
+- [@siddp6](https://github.com/siddp6) (my account but on another laptop)
 ## Directory stracture
     C:.
     │   .gitignore
@@ -83,10 +93,13 @@ Offline E-Commerce, local shops are now in your phone
                         nav.html
 ## Run Locally
 
+- [Deployment Video](https://youtu.be/AL4ydKZyoLo)
+
+
 Clone the project
 
 ```bash
-  git clone https://github.com/sidd6p/Project-X.git
+  git clone https://github.com/sidd6p/offline-e-commerce.git
 ```
 
 ### BUYER

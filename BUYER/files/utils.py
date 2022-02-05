@@ -57,11 +57,12 @@ def place_bulk_order(bType):
 
 
 def add_to_cart(action):
-    if len(action) == 1:
+    if len(action[1]) == 1:
         add_all_to_cart()
     else:
         query = """ INSERT OR REPLACE into basket VALUES (?, ?, ?)"""
-        data = (int(action[1]), int(current_user.id), "c", ) 
+        type = "c"
+        data = (int(action[1]), int(current_user.id), str(type), ) 
         db_query(query, data)
 
 
@@ -82,7 +83,7 @@ def delete_from_cart(action):
 
 
 def add_to_wishlist(action):
-    if len(action) == 1:
+    if len(action[1]) == 1:
         add_all_to_wishlist()
     else:        
         query = """ INSERT OR REPLACE into basket VALUES (?, ?, ?)"""
