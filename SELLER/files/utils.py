@@ -179,19 +179,36 @@ def get_all_orders():
 
 
 def get_orders_history():
+    print("\n\n\n\n")
     connection = sqlite3.connect(config.PRODUCT_DATABASE)
     cursor = connection.cursor()
     query = "SELECT \
-                products.productName,\
-                products.productPhoto,\
+                products.productName, \
+                products.productPhoto, \
                 orders.buyerName, \
-                orders.buyerEmail, \
-                orders.id, \
-                orders.status, \
-                orders.productID\
-            FROM products INNER JOIN orders ON orders.productID = products.id\
-            WHERE orders.sellerID = (?) AND (orders.status = 'Received' OR orders.status = 'Cancelled')"
+                orders.buyerEmail,\
+                orders.id,\
+                orders.status,\
+                orders.productID,\
+                orders.orderTime,\
+                orders.buyeAdd\
+            FROM products INNER JOIN orders ON products.sellerID = orders.sellerID\
+            WHERE orders.sellerID = (?) AND orders.productID = products.id AND orders.status = 'Received' OR orders.status = 'Cancelled'"
     data = (int(current_user.id), )
     cursor.execute(query, data)
-    orders = cursor.fetchall()
+    results = cursor.fetchall()
+    orders = []
+    for result in results:
+        orders.append({
+                    "productName" : result[0],
+                    "productPhoto" : result[1],
+                    "buyerName" : result[2],
+                    "buyerEmail" : result[3],
+                    "orderId" : result[4],
+                    "status" : result[5],
+                    "productID" : result[6],
+                    "orderTime" : result[7],
+                    "buyerAdd" : result[8]
+                    })
+    print(orders)
     return orders
