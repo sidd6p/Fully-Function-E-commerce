@@ -64,8 +64,9 @@ def add_product(form):
                 productPrice, 
                 shopName, 
                 sellerID, 
-                sellerAddress)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?) """
+                sellerAddress,
+                sellerEmail)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) """
     data =  (
             form.productName.data,\
             form.productType.data,\
@@ -74,7 +75,8 @@ def add_product(form):
             int(form.productPrice.data),\
             current_user.shopName,\
             int(current_user.id),\
-            current_user.address, 
+            current_user.address,\
+            current_user.email,\
             )
     cursor.execute(query, data)
     connection.commit()

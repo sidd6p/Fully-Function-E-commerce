@@ -129,9 +129,10 @@ def get_products_details():
             "prod_img" : result[3],
             "prod_desc": result[4], 
             "prod_price": result[5],
-            "prod_shop": result[6],
-            "seller_id" : result[7],
-            "prod_seller" : result[8]
+            "seller_add" : result[6],
+            "prod_shop": result[7],
+            "seller_email" : result[8],
+            "seller_id" : result[9],
         })
     return prods
 

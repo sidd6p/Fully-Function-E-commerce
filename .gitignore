@@ -3,8 +3,7 @@
 #images
 images/
 !default.jpg
-#databases
-*db
+
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

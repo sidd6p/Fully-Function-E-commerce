@@ -57,7 +57,7 @@ def register():
     if form.validate_on_submit():
         utils.add_buyer(form_data=form)
         flash("Your buyer home has been created successfully", 'info')
-        return redirect(url_for("buyer.home"))
+        return redirect(url_for("user.home"))
     return render_template('create-buyer.html', form = form,  title = "Create Your Buyer Account", createBuyerPage = True)
 
 
@@ -65,7 +65,7 @@ def register():
 @user.route("/buyer-login", methods = ["POST", "GET"])
 def login():
     if current_user.is_authenticated:
-        return redirect(url_for('buyer.home'))
+        return redirect(url_for('user.home'))
     form = Login()
     if form.validate_on_submit():
         hasBuyer = Buyer.query.filter_by(email = form.email.data).first()
