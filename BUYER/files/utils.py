@@ -1,7 +1,7 @@
 import sqlite3
 from files.models import Buyer
 from files import db
-from files.config import PRODUCT_DATABASE, get_cursor
+from files.config import PRODUCT_DATABASE, get_cursor, PSWD_CONTEXT
 from flask_login import current_user
 from datetime import datetime
 
@@ -106,11 +106,15 @@ def delete_from_wishlist(action):
     db_query(query, data)
 
 
+def verify_pswd(plain_pswd, hased_pswd):
+    return PSWD_CONTEXT.verify(plain_pswd, hased_pswd)
+    
+
 def add_buyer(form_data):
     newBuyer = Buyer(fname = form_data.buyerFirstName.data,\
                     lname = form_data.buyerLastName.data,\
                     email = form_data.email.data,\
-                    password = form_data.pswd.data,\
+                    password = PSWD_CONTEXT.hash(form_data.pswd.data),\
                     address = form_data.address.data,\
                     city = form_data.city.data,\
                     state = form_data.state.data,\

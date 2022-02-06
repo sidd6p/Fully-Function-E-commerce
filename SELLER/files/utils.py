@@ -1,7 +1,6 @@
 import sqlite3
 import secrets
 import os
-from unittest import result
 from .models import Seller
 from files import db, config
 from flask_login import current_user
@@ -35,13 +34,17 @@ def saveShopImage(formImage):
     return imageName
 
 
+def verify_pswd(plain_pswd, hased_pswd):
+    return config.PSWD_CONTEXT.verify(plain_pswd, hased_pswd)
+    
+
 def add_seller(form):
     shopLogo = saveShopImage(form.shopLogo.data)
     new_seller = Seller(
                         fname = form.sellerFirstName.data,\
                         lname = form.sellerLastName.data,\
                         email = form.email.data,\
-                        password = form.pswd.data,\
+                        password = config.PSWD_CONTEXT.hash(form.pswd.data),\
                         address = form.address.data,\
                         city = form.city.data, \
                         state = form.state.data, \

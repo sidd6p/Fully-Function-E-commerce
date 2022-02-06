@@ -1,8 +1,11 @@
 from azure.storage.blob import BlobServiceClient
+from passlib.context import CryptContext
 from dotenv import load_dotenv
 import sqlite3
 import os
 
+
+PSWD_CONTEXT = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
 load_dotenv()

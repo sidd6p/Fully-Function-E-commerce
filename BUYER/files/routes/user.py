@@ -69,7 +69,7 @@ def login():
     form = Login()
     if form.validate_on_submit():
         hasBuyer = Buyer.query.filter_by(email = form.email.data).first()
-        if hasBuyer and form.password.data == hasBuyer.password:
+        if hasBuyer and utils.verify_pswd(form.password.data, hasBuyer.password):
             login_user(hasBuyer)
             flash("Login Successfull", 'info')
             nextPage = request.args.get('next', 'buyer-home')

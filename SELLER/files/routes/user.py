@@ -24,7 +24,8 @@ from flask_login import (
 from files.utils import (
                         add_seller, 
                         get_products_details,
-                        get_this_product
+                        get_this_product,
+                        verify_pswd
                         )
 
 
@@ -67,7 +68,7 @@ def login():
     form = Login()
     if form.validate_on_submit():
         hasBuyer = Seller.query.filter_by(email = form.email.data).first()
-        if hasBuyer and form.password.data == hasBuyer.password:
+        if hasBuyer and verify_pswd(form.password.data, hasBuyer.password):
             login_user(hasBuyer)
             flash("Login Successfully", 'info')
             nextPage = request.args.get('next', 'seller-home')
