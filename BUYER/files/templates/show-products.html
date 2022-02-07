@@ -4,7 +4,7 @@
   <div class="float-left">
     <h3>{{ title }}</h3>
   </div>
-  {% if not allProdsPage %}
+  {% if not allProdsPage and title != 'Your History' and bType != "order"%}
     <div class="float-right">
       <form class="form-inline" action="{{ url_for('orders.buyerAction') }}" method="post">    
         <div class="custom-control custom-checkbox my-1 mr-sm-1">
@@ -42,7 +42,7 @@
                       <hr>
                     {% endif %}
                   </div>
-                <div>{{ prod.prod_name }}</div>
+                <div><b>{{ prod.prod_name }}</b></div>
                 <span style="font-size: 15px; ">{{ prod.prod_desc }}</span>
                 <hr>
                 <img title="My Prod" style="height:250px; width:auto; max-width:250px; margin-left: auto; margin-right: auto;" src=" {{ prod.prod_img }} ">

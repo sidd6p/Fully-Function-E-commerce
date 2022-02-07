@@ -3,31 +3,44 @@
 
 Offline E-Commerce, local shops are now in your phone
 
-Some points to consider
-- This application is based on microservices architecture, means SELLER and BUYER code can work independently and hence they both have different database
-- In upcoming deployment, Product database will be access through only API
+BUYER: http://buyer-home-offline-e-commerce.eastus.cloudapp.azure.com/
+
+
+SELLER:http://buyer-home-offline-e-commerce.eastus.cloudapp.azure.com/
 
 
 
-## Demo
+## Azure Services
 
+1. Azure SQL Server
+- Used to store product details, orders details, wishlist and cart details.
+2. Azure Blobs
+- Used Azure storage container to store images
+- This include seller shop image/logo and products images
+- Images are accessed throught the connection string
+3. Azure VM
+- Two VM used, both having ubuntu image
+- One VM for Buyer, this handle all opertaion related to buyers
+- One VM for Seller, this deals with all sellerrelated operations
+- VMs also act as storage platform for information of seller and buyer
 
-[Video Demo](https://youtu.be/6jAYiVFLnwM)
+#### Using Two VMs and seperated DB for products and order makes product information and orders details available incase if seller or buyer server goes down. If seller server will go down, then still buyer will be able to access all functionality as normal and same privilage for seller also. __This whole project is based on microservice architecture, so keeping different database for different microservice, and future updates include FastApi for accessing Azure SQL Server__ 
 ## Authors
 
 - [@sidd6p](https://github.com/sidd6p)
 - [@siddp6](https://github.com/siddp6) (my account but on another laptop)
 ## Directory stracture
-    C:.
+    Offline E-Commerce
     │   .gitignore
     │   LICENSE
     │   README.md
-    │   
+    │
     ├───BUYER
     │   │   .flaskenv
+    │   │   db-offline-e-commerce
     │   │   requirements.txt
     │   │   run.py
-    │   │   
+    │   │
     │   └───files
     │       │   .env
     │       │   config.py
@@ -55,11 +68,9 @@ Some points to consider
     │                   meta.html
     │                   nav.html
     │
-    ├───DATABASE_PROD
-    │       product.db
-    │
     └───SELLER
         │   .flaskenv
+        │   db-offline-e-commerce
         │   requirements.txt
         │   run.py
         │
@@ -78,6 +89,7 @@ Some points to consider
             │       products.py
             │       user.py
             │
+            ├───static
             └───templates
                 │   accounts.html
                 │   create-shop.html
@@ -158,7 +170,7 @@ run the project
 - Smart Product Search
 
 ### BUYER
-- Buy Product
+- Buy Product with quantity specification
 - Add to Cart or Wishlist
 - Bulk order all products in Cart or Wishlist
 - Transfer products from Cart to Wishlist or vice-versa
@@ -175,6 +187,15 @@ run the project
    - Accept
    - Out_for_delivery
    - Cancelled
+## Demo
+
+
+[BUYER's Interface](http://buyer-home-offline-e-commerce.eastus.cloudapp.azure.com/)
+
+
+[SELLER's Interface](http://buyer-home-offline-e-commerce.eastus.cloudapp.azure.com/)
+
+[Video Demo](https://youtu.be/6jAYiVFLnwM)
 ## Upcoming Feature
 
 ### GENERAL
@@ -184,7 +205,6 @@ run the project
 ### BUYER
 - Get Delivery boy/girl details
 - Add instruction for the order/Delivery
-- Set the order quantity
 - Get SELLER location on map
 
 ### SELLER
@@ -192,7 +212,7 @@ run the project
 
 ## Environment Variables
 
-To run this project, you will need to add the following environment variables
+To run this project locally, you will need to add the following environment variables
 
 #### SELLER\files\\.env
 
@@ -214,3 +234,23 @@ CONTAINER_NAME=YOUR_BLOB_CONTAINER_NAME
 SECRET_KEY=YOUR_SECRET_KEY
 SELLER_DATABASE=sqlite:///databases/buyer.db
 ```
+
+## Deployment
+
+Buyer Interface and Seller Interface are Deployed seperately to keep low Coupling.
+
+Both are deployed in Azure VM with ```nginx```, ```gunicorn``` and ```supervisor```.
+
+
+## Tech Stack
+
+**Client:** HTML, CSS, Bootstrap 4
+
+**Server:** Flask, Jinja2
+
+**Deployment** Azure VM
+
+**Database** Azure SQL Server, Sqlite3
+
+**VCS** Git Bash (GitHub)
+
