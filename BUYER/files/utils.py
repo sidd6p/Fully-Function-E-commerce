@@ -40,7 +40,7 @@ def place_order(action):
         dbquery(query, data)
         query = """ DELETE FROM basket
                     WHERE productID = ? AND buyerID = ? AND 
-                    EXISTS(SELECT 1 FROM basket WHERE productID = ? AND buyerID = ? LIMIT 1) """
+                    EXISTS(SELECT TOP 1 * FROM basket WHERE productID = ? AND buyerID = ?) """
         data = (int(action[1]), int(current_user.id), int(action[1]), int(current_user.id), )
         dbquery(query, data)
 
@@ -57,6 +57,29 @@ def place_bulk_order(bType):
         actions.append((-1, res[0][0], res[0][1]))
     for action in actions:
         place_order(action)
+
+################# Cart #################
+def get_cart_details():
+    query = "SELECT * FROM products \
+            INNER JOIN basket ON basket.productID = products.id \
+            WHERE basket.buyerID = (?) AND basket.bType = 'c'"
+    data = (int(current_user.id), )
+    results = dbquery(query, data, 'S')
+    prods = []
+    for result in results:
+        prods.append({
+            "prod_id" : result[0],
+            "prod_name" : result[1],
+            "prod_type" : result[2],
+            "prod_img" : result[3],
+            "prod_desc": result[4], 
+            "prod_price": result[5],
+            "seller_add" : result[6],
+            "prod_shop": result[7],
+            "seller_email" : result[8],
+            "seller_id" : result[9],
+        })
+    return prods
 
 
 ################# Add to Cart #################
@@ -91,6 +114,30 @@ def delete_from_cart(action):
     dbquery(query, data)
 
 
+################# Wishlist #################
+def get_wish_details():
+    query = "SELECT * FROM products \
+            INNER JOIN basket ON basket.productID = products.id\
+            WHERE basket.buyerID = (?) AND basket.btype = 'w'"
+    data = (int(current_user.id), )
+    results = dbquery(query, data, 'S')
+    prods = []
+    for result in results:
+        prods.append({
+            "prod_id" : result[0],
+            "prod_name" : result[1],
+            "prod_type" : result[2],
+            "prod_img" : result[3],
+            "prod_desc": result[4], 
+            "prod_price": result[5],
+            "seller_add" : result[6],
+            "prod_shop": result[7],
+            "seller_email" : result[8],
+            "seller_id" : result[9],
+        })
+    return prods
+
+
 ################# Add to Wishlist #################
 def add_to_wishlist(action):
     if len(action[1]) == 1 and action[1] == 'w':
@@ -122,6 +169,58 @@ def delete_from_wishlist(action):
         query = "DELETE FROM basket WHERE productID = ? AND buyerID = ? AND bType = 'w'"
         data = (int(action[1]), int(current_user.id), ) 
     dbquery(query, data)
+
+    
+################# Orders #################
+def get_order_details():
+    query = "SELECT * FROM products \
+            INNER JOIN orders ON orders.productID = products.id \
+            WHERE orders.buyerID = (?) AND orders.status <> 'Received' AND orders.status <> 'Cancelled'"
+    data = (int(current_user.id), )
+    results = dbquery(query, data, 'S')
+    prods = []
+    for result in results:
+        prods.append({
+            "prod_id" : result[0],
+            "prod_name" : result[1],
+            "prod_type" : result[2],
+            "prod_img" : result[3],
+            "prod_desc": result[4], 
+            "prod_price": result[5],
+            "seller_add" : result[6],
+            "prod_shop": result[7],
+            "seller_email" : result[8],
+            "seller_id" : result[9],
+            "order_id": result[10],
+            "order_status" : result[16]
+        })
+    return prods
+
+
+################# History #################
+def get_history_details():
+    query = "SELECT * FROM products INNER JOIN \
+            orders ON orders.productID = products.id \
+            WHERE orders.buyerID = (?) AND (orders.status = 'Received' OR orders.status = 'Cancelled')"
+    data = (int(current_user.id), )
+    results = dbquery(query, data, 'S')
+    prods = []
+    for result in results:
+        prods.append({
+            "prod_id" : result[0],
+            "prod_name" : result[1],
+            "prod_type" : result[2],
+            "prod_img" : result[3],
+            "prod_desc": result[4], 
+            "prod_price": result[5],
+            "seller_add": result[6],
+            "prod_shop": result[7],
+            "seller_email" : result[8],
+            "order_id": result[10],
+            "order_status" : result[16]
+        })
+    return prods
+
 
 
 ################# Verify Hash Password #################
@@ -190,105 +289,6 @@ def get_this_product(data):
             "prod_shop": result[6],
             "seller_id" : result[7],
             "prod_seller" : result[8]
-        })
-    return prods
-
-
-################# Wishlist #################
-def get_wish_details():
-    query = "SELECT * FROM products \
-            INNER JOIN basket ON basket.productID = products.id\
-            WHERE basket.buyerID = (?) AND basket.btype = 'w'"
-    data = (int(current_user.id), )
-    results = dbquery(query, data, 'S')
-    prods = []
-    for result in results:
-        prods.append({
-            "prod_id" : result[0],
-            "prod_name" : result[1],
-            "prod_type" : result[2],
-            "prod_img" : result[3],
-            "prod_desc": result[4], 
-            "prod_price": result[5],
-            "seller_add" : result[6],
-            "prod_shop": result[7],
-            "seller_email" : result[8],
-            "seller_id" : result[9],
-        })
-    return prods
-
-    
-################# Cart #################
-def get_cart_details():
-    query = "SELECT * FROM products \
-            INNER JOIN basket ON basket.productID = products.id \
-            WHERE basket.buyerID = (?) AND basket.bType = 'c'"
-    data = (int(current_user.id), )
-    results = dbquery(query, data, 'S')
-    prods = []
-    for result in results:
-        prods.append({
-            "prod_id" : result[0],
-            "prod_name" : result[1],
-            "prod_type" : result[2],
-            "prod_img" : result[3],
-            "prod_desc": result[4], 
-            "prod_price": result[5],
-            "seller_add" : result[6],
-            "prod_shop": result[7],
-            "seller_email" : result[8],
-            "seller_id" : result[9],
-        })
-    return prods
-
-
-################# Orders #################
-def get_order_details():
-    query = "SELECT * FROM products \
-            INNER JOIN orders ON orders.productID = products.id \
-            WHERE orders.buyerID = (?) AND orders.status <> 'Received' AND orders.status <> 'Cancelled'"
-    data = (int(current_user.id), )
-    results = dbquery(query, data, 'S')
-    prods = []
-    for result in results:
-        prods.append({
-            "prod_id" : result[0],
-            "prod_name" : result[1],
-            "prod_type" : result[2],
-            "prod_img" : result[3],
-            "prod_desc": result[4], 
-            "prod_price": result[5],
-            "seller_add" : result[6],
-            "prod_shop": result[7],
-            "seller_email" : result[8],
-            "seller_id" : result[9],
-            "order_id": result[10],
-            "order_status" : result[16]
-        })
-    return prods
-
-
-################# History #################
-def get_history_details():
-    query = "SELECT * FROM products INNER JOIN \
-            orders ON orders.productID = products.id \
-            WHERE orders.buyerID = (?) AND (orders.status = 'Received' OR orders.status = 'Cancelled')"
-    data = (int(current_user.id), )
-    results = dbquery(query, data, 'S')
-    prods = []
-    for result in results:
-        prods.append({
-            "prod_id" : result[0],
-            "prod_name" : result[1],
-            "prod_type" : result[2],
-            "prod_img" : result[3],
-            "prod_desc": result[4], 
-            "prod_price": result[5],
-            "seller_add": result[6],
-            "prod_shop": result[7],
-            "seller_email" : result[8],
-            "order_id": result[10],
-            "order_status" : result[16]
         })
     return prods
 
