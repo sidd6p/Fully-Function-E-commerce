@@ -31,7 +31,7 @@
   <div class="container">
       <div class="row">
         {% for prod in prods %}
-        <div class="col-sm-auto col-md-5 border border-primary border border-lg m-4">
+        <div class="col-md-5 border border-primary border border-lg m-4">
           <article class="media content-section">
             <div class="media-body">
               <div class="article-metadata">
@@ -45,7 +45,7 @@
                 <div>{{ prod.prod_name }}</div>
                 <span style="font-size: 15px; ">{{ prod.prod_desc }}</span>
                 <hr>
-                <img title="My Prod" style="height:170px; width:auto; max-width:500px; margin-left: auto; margin-right: auto;" src=" {{ prod.prod_img }} ">
+                <img title="My Prod" style="height:250px; width:auto; max-width:250px; margin-left: auto; margin-right: auto;" src=" {{ prod.prod_img }} ">
                 <hr>
                 <div class="col">
                   Prices: <span style="font-size: 30px; ">{{ prod.prod_price }}</span>

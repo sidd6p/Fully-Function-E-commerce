@@ -56,7 +56,7 @@ def place_bulk_order(bType):
         res = dbquery(query, (int(result[0]), ), 'S')
         actions.append((-1, res[0][0], res[0][1]))
     for action in actions:
-        place_order(action)
+        place_order(action, 1)
 
 
 ################# Cart #################
