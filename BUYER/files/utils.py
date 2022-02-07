@@ -30,13 +30,13 @@ def update_status(action):
 
 
 ################# Place Order #################
-def place_order(action):
+def place_order(action, quantity):
     if len(action) == 2:
         place_bulk_order(action[1])
     else:
         buyer_address = current_user.address + " " + current_user.city + " " + current_user.state + " " + str(current_user.pin)
-        data = (int(action[1]), int(current_user.id), int(action[2]), current_user.fname, current_user.email, datetime.utcnow(),buyer_address, ) 
-        query = "INSERT INTO orders (productID, buyerID, sellerID, buyerName, buyerEmail, orderTime, buyeAdd) VALUES (?, ?, ?, ?, ?, ?, ?)"
+        data = (int(action[1]), int(current_user.id), int(action[2]), current_user.fname, current_user.email, datetime.utcnow(),buyer_address, quantity ) 
+        query = "INSERT INTO orders (productID, buyerID, sellerID, buyerName, buyerEmail, orderTime, buyeAdd, quantity) VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
         dbquery(query, data)
         query = """ DELETE FROM basket
                     WHERE productID = ? AND buyerID = ? AND 
@@ -57,6 +57,7 @@ def place_bulk_order(bType):
         actions.append((-1, res[0][0], res[0][1]))
     for action in actions:
         place_order(action)
+
 
 ################# Cart #################
 def get_cart_details():
@@ -192,7 +193,8 @@ def get_order_details():
             "seller_email" : result[8],
             "seller_id" : result[9],
             "order_id": result[10],
-            "order_status" : result[16]
+            "order_status" : result[16],
+            "order_quantity" : result[19]
         })
     return prods
 
@@ -217,7 +219,8 @@ def get_history_details():
             "prod_shop": result[7],
             "seller_email" : result[8],
             "order_id": result[10],
-            "order_status" : result[16]
+            "order_status" : result[16],
+            "order_quantity": result[19]
         })
     return prods
 
@@ -276,6 +279,7 @@ def get_this_product(data):
             (sellerAddress LIKE '{}')\
             ORDER BY productName, productType, shopName, sellerAddress, productDesc"\
             .format(data, data, data, data, data)
+    data = ()
     results = dbquery(query, data, 'S')
     prods = []
     for result in results:

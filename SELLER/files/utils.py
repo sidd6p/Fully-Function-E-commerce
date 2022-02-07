@@ -1,6 +1,7 @@
 import secrets
 import os
 import pyodbc
+
 from .models import Seller
 from files import db, config
 from flask_login import current_user
@@ -158,9 +159,11 @@ def get_all_orders():
                 orders.status,\
                 orders.productID,\
                 orders.orderTime,\
-                orders.buyeAdd\
-            FROM products INNER JOIN orders ON products.sellerID = orders.sellerID\
-            WHERE orders.sellerID = (?) AND orders.productID = products.id AND orders.status <> 'Received' AND orders.status <> 'Cancelled'"
+                orders.buyeAdd,\
+                orders.quantity,\
+                products.productPrice \
+                FROM products INNER JOIN orders ON products.sellerID = orders.sellerID\
+                WHERE orders.sellerID = (?) AND orders.productID = products.id AND orders.status <> 'Received' AND orders.status <> 'Cancelled'"
     data = (int(current_user.id), )
     results = dbquery(query, data, "S")
     orders = []
@@ -174,7 +177,9 @@ def get_all_orders():
                     "status" : result[5],
                     "productID" : result[6],
                     "orderTime" : result[7],
-                    "buyerAdd" : result[8]
+                    "buyerAdd" : result[8],
+                    "quantity" : result[9],
+                    "price": result[10]
                     })
     return orders
 
@@ -190,7 +195,9 @@ def get_orders_history():
                 orders.status,\
                 orders.productID,\
                 orders.orderTime,\
-                orders.buyeAdd\
+                orders.buyeAdd, \
+                orders.quantity,\
+                products.productPrice \
             FROM products INNER JOIN orders ON products.sellerID = orders.sellerID\
             WHERE orders.sellerID = (?) AND orders.productID = products.id AND orders.status = 'Received' OR orders.status = 'Cancelled'"
     data = (int(current_user.id), )
@@ -206,6 +213,8 @@ def get_orders_history():
                     "status" : result[5],
                     "productID" : result[6],
                     "orderTime" : result[7],
-                    "buyerAdd" : result[8]
+                    "buyerAdd" : result[8],
+                    "quantity" : result[9],
+                    "price": result[10]
                     })
     return orders

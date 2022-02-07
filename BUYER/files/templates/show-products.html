@@ -31,7 +31,7 @@
   <div class="container">
       <div class="row">
         {% for prod in prods %}
-        <div class="col-sm-auto col-md-auto border border-primary border border-lg m-3">
+        <div class="col-sm-auto col-md-5 border border-primary border border-lg m-4">
           <article class="media content-section">
             <div class="media-body">
               <div class="article-metadata">
@@ -45,9 +45,16 @@
                 <div>{{ prod.prod_name }}</div>
                 <span style="font-size: 15px; ">{{ prod.prod_desc }}</span>
                 <hr>
-                <img class="img-thumbnail img-fluid" title="My Prod" height="200" width="400" src=" {{ prod.prod_img }} ">
+                <img title="My Prod" style="height:170px; width:auto; max-width:500px; margin-left: auto; margin-right: auto;" src=" {{ prod.prod_img }} ">
                 <hr>
-                Prices: <span style="font-size: 30px; ">{{ prod.prod_price }}</span>
+                <div class="col">
+                  Prices: <span style="font-size: 30px; ">{{ prod.prod_price }}</span>
+                </div>
+                {% if bType == "order" or title == 'Your History' %}
+                  <div class="col">
+                    Quantity: <span style="font-size: 30px; ">{{ prod.order_quantity }}</span>
+                  </div>
+                {% endif %}
                 <hr>
                 {% if title != 'Your History' %}
                   <form method = "POST" action = "{{ url_for('orders.buyerAction') }}">
@@ -72,8 +79,20 @@
                           {% endif %}
                         </select>
                       </div>
-                      <div class="col-auto">
-                        <button type="submit" class="btn btn-primary">Proceed</button>
+                      <br>
+                      <br>
+                      <hr>
+                      {% if bType != "order" and title != 'Your History' %}
+                        <div class="col-auto">
+                          <input type="number" name="prodquantity" class="form-control" id="prod-quantity" placeholder="1" max="100" min="1" value="1">
+                        </div>
+                      {% endif %}
+                      <hr>
+                      <br>
+                      <div class="row-auto">
+                        <div class="col-auto">
+                          <button type="submit" class="btn btn-primary">Proceed</button>
+                        </div>
                       </div>
                     </div>
                   </form>
@@ -81,7 +100,7 @@
                 <hr>
                 <h6>Sold by:</h6>
                 <h6><small>{{ prod.prod_shop }}</small></h6>
-                <small>{{ prod.seller_email }}</small>
+                <small><a href="mailto:{{ prod.seller_email }}"><b>{{ prod.seller_email }}</b></a></small>
                 <hr>
                 <h6>Address:</h6>
                 <h6><small><i>{{ prod.seller_add }}</i></small></h6>

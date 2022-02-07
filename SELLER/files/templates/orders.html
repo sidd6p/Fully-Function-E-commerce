@@ -4,7 +4,7 @@
     <h3>{{ title }}</h3><br>
       <div class="row">
         {% for order in orders %}
-        <div class="col-sm-auto col-md-5 border border-primary border border-lg m-2">
+        <div class="col-sm-auto col-md-5 border border-primary border border-lg m-4">
           <article class="media content-section">
             <div class="media-body">
               <div class="article-metadata">
@@ -15,15 +15,22 @@
                 </div>
                 <hr>
                 <p>Product Name: {{ order.productName }} </p>
-                <span style="font-size: 15px; ">Buyer Name: {{ order.buyerName }}</span><br>
-                <span style="font-size: 15px; ">Buyer Email: {{ order.buyerEmail }}</span><br>
-                <span style="font-size: 15px; ">Buyer Address: {{ order.buyerAdd }}</span>
+                <span style="font-size: 15px; ">Buyer Name: <b>{{ order.buyerName }}</b></span><br>
+                <span style="font-size: 15px; ">Buyer Email: <a href="mailto:{{ order.buyerEmail }}"><b>{{ order.buyerEmail }}</b></a></span><br>
+                <span style="font-size: 15px; ">Buyer Address: <b>{{ order.buyerAdd }}</b></span>
                 <hr>
-                 <img class="img-thumbnail img-fluid" title="My Prod" height="200" width="400" src="{{ order.productPhoto }}">
+                 <img title="My Prod" style="height:170px; width:auto; max-width:500px; margin-left: auto; margin-right: auto;" src="{{ order.productPhoto }}">
                 <hr>
               </div>
             </div>
           </article>
+          <div class="col">
+            Prices: <span style="font-size: 30px; ">{{ order.price }}</span>
+          </div>
+          <div class="col">
+            Quantity: <span style="font-size: 30px; ">{{ order.quantity }}</span>
+          </div>
+          <hr>
           {% if title != 'Your History' %}
             <form method = "POST" action = "">
               <div class="form-row align-items-center">

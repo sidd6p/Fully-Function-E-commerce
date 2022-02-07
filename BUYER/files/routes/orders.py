@@ -61,11 +61,12 @@ def order():
 def buyerAction():
     if request.method == "POST":
         action = request.form.get("buyeraction").split()
+        quantity = request.form.get("prodquantity")
         if action[0] == "0":
             update_status(action)
             flash("Your order (Order Id: {}) has been {}".format(int(action[2]), str(action[1])), 'info') 
         if action[0] == "1":
-            place_order(action)
+            place_order(action, quantity)
             flash("Your order has been placed", 'info')
         if action[0] == "2":
             add_to_cart(action)
