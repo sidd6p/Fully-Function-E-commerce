@@ -1,6 +1,6 @@
-import sqlite3
 import secrets
 import os
+import pyodbc
 from .models import Seller
 from files import db, config
 from flask_login import current_user
@@ -8,13 +8,13 @@ from flask_login import current_user
 
 
 def dbquery(query, data):
-    dbAddress = config.PRODUCT_DATABASE
-    connection = sqlite3.connect(dbAddress)
+    connection = pyodbc.connect('DRIVER='+config.PRODUCT_DRIVER+';SERVER=tcp:'+config.PRODUCT_SERVER+';PORT=1433;DATABASE='+config.PRODUCT_DATABASE+';UID='+config.PRODUCT_USER+';PWD='+ config.PRODUCT_PSWD)
     cursor = connection.cursor()
     cursor.execute(query, data)
+    result = cursor.fetchall()
     connection.commit()
     connection.close()
-
+    return result
 
 def saveProdImage(formImage):
     randonHex = secrets.token_hex(8)
@@ -58,8 +58,6 @@ def add_seller(form):
 
 def add_product(form):
     productImage = saveProdImage(form.productPhoto.data)
-    connection = sqlite3.connect(config.PRODUCT_DATABASE)
-    cursor = connection.cursor()
     query = """ INSERT INTO products 
                 (productName, 
                 productType, 
@@ -82,9 +80,7 @@ def add_product(form):
             current_user.address,\
             current_user.email,\
             )
-    cursor.execute(query, data)
-    connection.commit()
-    connection.close()
+    dbquery(query, data)
 
 
 def get_image_url(image_name):
@@ -94,11 +90,9 @@ def get_image_url(image_name):
 
 
 def get_products_details(current_user_id: int):
-    cursor = config.get_cursor()
     query = "SELECT * FROM products WHERE sellerID = (?)"
     data = (current_user_id, )
-    cursor.execute(query, data)
-    results = cursor.fetchall()
+    results = dbquery(query, data)
     prods = []
     for result in results:
         prods.append({
@@ -114,7 +108,6 @@ def get_products_details(current_user_id: int):
 
 
 def get_this_product(current_user_id: int, data):
-    cursor = config.get_cursor()
     data = "%{0}%".format(data)
     query = "SELECT * FROM products\
             WHERE\
@@ -124,8 +117,7 @@ def get_this_product(current_user_id: int, data):
             productDesc LIKE '{}')\
             ORDER BY productName, productType, productDesc"\
             .format(current_user_id, data, data, data, data, data)
-    cursor.execute(query)
-    results = cursor.fetchall()
+    results = dbquery(query, data)
     prods = []
     for result in results:
         prods.append({
@@ -142,14 +134,12 @@ def get_this_product(current_user_id: int, data):
     return prods
 
 def update_order_status(action):
-        query = " UPDATE orders SET status = ? WHERE id = ?"
-        data = (str(action[0]), int(action[1]),)
-        dbquery(query, data)
+    query = " UPDATE orders SET status = ? WHERE id = ?"
+    data = (str(action[0]), int(action[1]),)
+    dbquery(query, data)
 
 
 def get_all_orders():
-    connection = sqlite3.connect(config.PRODUCT_DATABASE)
-    cursor = connection.cursor()
     query = "SELECT \
                 products.productName, \
                 products.productPhoto, \
@@ -163,8 +153,7 @@ def get_all_orders():
             FROM products INNER JOIN orders ON products.sellerID = orders.sellerID\
             WHERE orders.sellerID = (?) AND orders.productID = products.id AND orders.status <> 'Received' AND orders.status <> 'Cancelled'"
     data = (int(current_user.id), )
-    cursor.execute(query, data)
-    results = cursor.fetchall()
+    results = dbquery(query, data)
     orders = []
     for result in results:
         orders.append({
@@ -182,9 +171,6 @@ def get_all_orders():
 
 
 def get_orders_history():
-    print("\n\n\n\n")
-    connection = sqlite3.connect(config.PRODUCT_DATABASE)
-    cursor = connection.cursor()
     query = "SELECT \
                 products.productName, \
                 products.productPhoto, \
@@ -198,8 +184,7 @@ def get_orders_history():
             FROM products INNER JOIN orders ON products.sellerID = orders.sellerID\
             WHERE orders.sellerID = (?) AND orders.productID = products.id AND orders.status = 'Received' OR orders.status = 'Cancelled'"
     data = (int(current_user.id), )
-    cursor.execute(query, data)
-    results = cursor.fetchall()
+    results = dbquery(query, data)
     orders = []
     for result in results:
         orders.append({
