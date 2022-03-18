@@ -1,3 +1,6 @@
+#IDE
+.vscode
+
 #DB related
 prod.py
 
