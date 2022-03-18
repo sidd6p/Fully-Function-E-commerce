@@ -247,8 +247,12 @@ def add_buyer(form_data):
 
 ################# Product Details #################
 def get_products_details():
-    query = "SELECT * FROM products"
-    data = ()
+    if (current_user.is_authenticated):
+        query = "SELECT * FROM products where sellerPin = (?)"
+        data = (current_user.pin, )
+    else:
+        query = "SELECT * FROM products"
+        data = ()
     results = dbquery(query, data, 'S')
     prods = []
     for result in results:

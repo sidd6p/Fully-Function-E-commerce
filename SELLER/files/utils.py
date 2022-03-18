@@ -70,8 +70,9 @@ def add_product(form):
                 shopName, 
                 sellerID, 
                 sellerAddress,
-                sellerEmail)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) """
+                sellerEmail, 
+                sellerPin)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) """
     data =  (
             form.productName.data,\
             form.productType.data,\
@@ -82,6 +83,7 @@ def add_product(form):
             int(current_user.id),\
             current_user.address,\
             current_user.email,\
+            current_user.pin,\
             )
     dbquery(query, data)
 

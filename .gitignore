@@ -3,6 +3,7 @@ prod.py
 
 #images
 images/
+screenshots/
 !default.jpg
 
 
